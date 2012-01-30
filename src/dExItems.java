@@ -1,0 +1,315 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+/**
+* dExchange v1.x
+* Copyright (C) 2011 Visual Illusions Entertainment
+* @author darkdiplomat <darkdiplomat@visualillusionsent.net>
+*
+* This file is part of dExchange.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with dExchange.  If not, see http://www.gnu.org/licenses/gpl.html
+*/
+
+public class dExItems {
+	Logger log = Logger.getLogger("Minecraft");
+	
+	public void makeItemsFile(String IF){
+		try {
+		    BufferedWriter out = new BufferedWriter(new FileWriter(IF));
+		    out.write("#~~dExchange Item Look Up File ~ Format: ITEMNAME=ID:DAMAGE,BuyPrice,SellPrice (DAMAGE is optional) Set a price to 0 to disable it~~#"); out.newLine();
+		    out.write("STONE=1,2.00,1.00"); out.newLine(); 
+		    out.write("GRASS=2,1.00,0.50"); out.newLine();
+		    out.write("DIRT=3,0.50,0.25"); out.newLine();
+		    out.write("COBBLESTONE=4,1.00,0.50"); out.newLine();
+		    out.write("WOODENPLANK=5,0.50,0.25"); out.newLine();
+		    out.write("SAPLING=6:0,0.10,0.05"); out.newLine();
+		    out.write("REDWOODSAPLING=6:1,0.20,0.10"); out.newLine();
+		    out.write("BIRCHSAPLING=6:2,0.20,0.10"); out.newLine();
+		    out.write("BEDROCK=7,0,0"); out.newLine();
+			out.write("WATER=9,0,0"); out.newLine();
+		  	out.write("LAVA=11,0,0"); out.newLine();
+		   	out.write("SAND=12,0.50,0.25"); out.newLine();
+		   	out.write("GRAVEL=13,0.50,0.25"); out.newLine();
+		  	out.write("GOLDORE=14,12.50,6.25"); out.newLine();
+		  	out.write("IRONORE=15,2.50,1.25"); out.newLine();
+		  	out.write("COALORE=16,0,0"); out.newLine();
+		  	out.write("LOG=17:0,2.00,1.00"); out.newLine();
+		  	out.write("REDWOODLOG=17:1,2.50,1.25"); out.newLine();
+		  	out.write("BIRCHLOG=17:2,2.50,1.25"); out.newLine();
+		  	out.write("LEAVES=18:0,0.50,0.25"); out.newLine();
+		  	out.write("REDWOODLEAVES=18:1,1.00,0.50"); out.newLine();
+		  	out.write("BIRCHLEAVES=18:2,1.00,0.50"); out.newLine();
+		  	out.write("SPONGE=19,2.00,1.00"); out.newLine();
+		  	out.write("GLASS=20,2.00,1.00"); out.newLine();
+		  	out.write("LAPISLAZULIORE=21,0,0"); out.newLine();
+		  	out.write("LAPISLUZULIBLOCK=22,15.00,7.50"); out.newLine();
+		  	out.write("DISPENSER=23,11.50,5.75"); out.newLine();
+		  	out.write("SANDSTONE=24,2.00,1.00"); out.newLine();
+		  	out.write("NOTEBLOCK=25,5.50,2.25"); out.newLine();
+		  	out.write("POWEREDRAIL=27,100.00,50.00"); out.newLine();
+		  	out.write("DETECTORRAIL=28,60.00,30.00"); out.newLine();
+		  	out.write("STICKYPISTON=29,12.50,6.25"); out.newLine();
+		  	out.write("WEB=30,0.25,0.13"); out.newLine();
+		  	out.write("PISTON=33,12.00,6.00"); out.newLine();
+		  	out.write("WHITEWOOL=35:0,2.00,1.00"); out.newLine();
+		  	out.write("WOOL=35:0,2.00,1.00"); out.newLine();
+		  	out.write("ORANGEWOOL=35:1,2.50,1.25"); out.newLine();
+		  	out.write("MAGENTAWOOL=35:2,2.50,1.25"); out.newLine();
+		  	out.write("LIGHTBLUEWOOL=35:3,2.50,1.25"); out.newLine();
+		  	out.write("YELLOWWOOL=35:4,2.50,1.25"); out.newLine();
+		  	out.write("LIGHTGREENWOOL=35:5,2.50,1.25"); out.newLine();
+		  	out.write("PINKWOOL=35:6,2.50,1.25"); out.newLine();
+		  	out.write("GRAYWOOL=35:7,2.50,1.25"); out.newLine();
+		  	out.write("LIGHTGRAYWOOL=35:8,2.50,1.25"); out.newLine();
+		  	out.write("CYANWOOL=35:9,2.50,1.25"); out.newLine();
+		  	out.write("PURPLEWOOL=35:10,2.50,1.25"); out.newLine();
+		  	out.write("BLUEWOOL=35:11,2.50,1.25"); out.newLine();
+		  	out.write("BROWNWOOL=35:12,2.50,1.25"); out.newLine();
+		  	out.write("GREENWOOL=35:13,2.50,1.25"); out.newLine();
+		  	out.write("REDWOOL=35:14,2.50,1.25"); out.newLine();
+		  	out.write("BLACKWOOL=35:15,2.50,1.25"); out.newLine();
+		  	out.write("DANDELION=37,0.50,0.25"); out.newLine();
+		  	out.write("ROSE=38,0.50,0.25"); out.newLine();
+		  	out.write("BROWNMUSHROOM=39,0.50,0.25"); out.newLine();
+		  	out.write("REDMUSHROOM=40,0.50,0.25"); out.newLine();
+		  	out.write("GOLDBLOCK=41,250.00,125.00"); out.newLine();
+		  	out.write("IRONBLOCK=42,50.00,25.00"); out.newLine();
+		  	out.write("DOUBLESTONESLAB=43,0,0"); out.newLine();
+		  	out.write("STONESLAB=44,2.00,1.00"); out.newLine();
+		  	out.write("SANDSTONESLAB=44:1,2.00,1.00"); out.newLine();
+		  	out.write("WOODENSLAB=44:2,0.50,0.25"); out.newLine();
+		  	out.write("COBBLESTONESLAB=44:3,1.00,0.50"); out.newLine();
+		  	out.write("BRICKSLAB=44:4,5.00,2.50"); out.newLine();
+		  	out.write("STONEBRICKSLAB=44:5,2.00,1.00"); out.newLine();
+		  	out.write("BRICK=45,5.00,2.50"); out.newLine();
+		  	out.write("TNT=46,0,0"); out.newLine();
+		  	out.write("BOOKSHELF=47,20.00,10.00"); out.newLine();
+		  	out.write("MOSSYCOBBLESTONE=48,2.00,1.00"); out.newLine();
+		  	out.write("OBSIDIAN=49,50.00,25.00"); out.newLine();
+		  	out.write("TORCH=50,0.50,0.25"); out.newLine();
+		  	out.write("FIRE=51,0,0"); out.newLine();
+		  	out.write("MOBSPAWNER=52,10.00,5.00"); out.newLine();
+		  	out.write("WOODSTAIRS=53,1.00,0.50"); out.newLine();
+		  	out.write("CHEST=54,4.00,2.00"); out.newLine();
+		  	out.write("DIAMONDORE=56,0,0"); out.newLine();
+		  	out.write("DIAMONDBLOCK=57,500.00,250.00"); out.newLine();
+		  	out.write("WORKBENCH=58,2.00,1.00"); out.newLine();
+		  	out.write("CRAFTINGTABLE=58,2.00,1.00"); out.newLine();
+		  	out.write("FURNACE=61,8.00,4.00"); out.newLine();
+		  	out.write("LADDER=65,3.50,1.75"); out.newLine();
+		  	out.write("RAILS=66,2.00,1.00"); out.newLine();
+		  	out.write("COBBLESTONESTAIRS=67,0.40,0.20"); out.newLine();
+		  	out.write("LEVER=69,1.00,0.50"); out.newLine();
+		  	out.write("STONEPRESSUREPLATE=70,4.00,2.00"); out.newLine();
+		  	out.write("WOODPRESSUREPLATE=72,1.00,0.50"); out.newLine();
+		  	out.write("REDSTONEORE=73,0,0"); out.newLine();
+		  	out.write("GLOWINGREDSTONEORE=74,0,0"); out.newLine();
+		  	out.write("REDSTONETORCH=76,2.00,1.00"); out.newLine();
+		  	out.write("STONEBUTTON=77,4.00,2.00"); out.newLine();
+		  	out.write("BUTTON=77,4.00,2.00"); out.newLine();
+		  	out.write("SNOW=78,1.00,0.50"); out.newLine();
+		  	out.write("ICE=79,1.00,0.50"); out.newLine();
+		  	out.write("SNOWBLOCK=80,1.00,0.50"); out.newLine();
+		  	out.write("CACTUS=81,1.00,0.50"); out.newLine();
+		  	out.write("CLAY=82,2.00,1.00"); out.newLine();
+		  	out.write("JUKEBOX=84,5.40,2.70"); out.newLine();
+		  	out.write("FENCE=85,3.00,1.50"); out.newLine();
+		  	out.write("PUMPKIN=86,2.50,1.25"); out.newLine();
+		  	out.write("NETHERRACK=87,3.00,1.50"); out.newLine();
+		  	out.write("SOULSAND=88,3.00,1.50"); out.newLine();
+		  	out.write("GLOWSTONE=89,6.00,3.00"); out.newLine();
+		  	out.write("JACKOLANTERN=91,3.00,1.50"); out.newLine();
+		  	out.write("TRAPDOOR=96,1.50,0.75"); out.newLine();
+		  	out.write("STONEBRICK=98,2.00,1.00"); out.newLine();
+		  	out.write("MOSSYSTONEBRICK=98:1,2.00,1.00"); out.newLine();
+		  	out.write("CRACKEDSTONEBRICK=98:2,2.00,1.00"); out.newLine();
+		  	out.write("IRONBARS=101,0.05,0.02"); out.newLine();
+		  	out.write("GLASSPANE=102,0.05,0.02"); out.newLine();
+		  	out.write("MELON=103,2.00,1.00"); out.newLine();
+		  	out.write("VINES=106,0.50,0.25"); out.newLine();
+		  	out.write("FENCEGATE=107,1.80,0.90"); out.newLine();
+		  	out.write("BRICKSTAIRS=108,7.50,3.75"); out.newLine();
+		  	out.write("STONEBRICKSTAIRS=109,3.00,1.50"); out.newLine();
+		  	out.write("MYCELIUM=110,1.00,0.50"); out.newLine();
+		  	out.write("LILYPAD=111,1.50,0.75"); out.newLine();
+		  	out.write("NETHERBRICK=112,6.00,3.00"); out.newLine();
+		  	out.write("NETHERBRICKFENCE=113,6.00,3.00"); out.newLine();
+		  	out.write("NETHERBRICKSTAIRS=114,6.50,3.25"); out.newLine();
+		  	out.write("NETHERWART=115,2.00,1.00"); out.newLine();
+		  	out.write("IRONSHOVEL=256,6.00,3.00"); out.newLine();
+		  	out.write("IRONPICKAXE=257,16.00,8.00"); out.newLine();
+		  	out.write("IRONAXE=258,16.00,8.00"); out.newLine();
+		  	out.write("FLINTANDSTEEL=259,7.00,3.50"); out.newLine();
+		  	out.write("LIGHTER=259,7.00,3.50"); out.newLine();
+		  	out.write("APPLE=260,0.15,0.07"); out.newLine();
+		  	out.write("BOW=261,0.30,0.15"); out.newLine();
+		  	out.write("ARROW=262,0.10,0.05"); out.newLine();
+		  	out.write("COAL=263,0.20,0.10"); out.newLine();
+		  	out.write("CHARCOAL=263:1,0.20,0.10"); out.newLine();
+		  	out.write("DIAMOND=264,50.00,25.00"); out.newLine();
+		  	out.write("IRONINGOT=265,5.00,2.50"); out.newLine();
+		  	out.write("GOLDINGOT=266,25.00,12.50"); out.newLine();
+		  	out.write("IRONSWORD=267,10.50,5.25"); out.newLine();
+		  	out.write("WOODENSWORD=268,1.50,0.75"); out.newLine();
+		  	out.write("WOODENSHOVEL=269,0.50,0.25"); out.newLine();
+		  	out.write("WOODENPICKAXE=270,1.50,0.75"); out.newLine();
+		  	out.write("WOODENAXE=271,1.50,0.75"); out.newLine();
+		  	out.write("STONESWORD=272,2.50,1.25"); out.newLine();
+		  	out.write("STONESHOVEL=273,1.00,0.50"); out.newLine();
+		  	out.write("STONEPICKAXE=274,3.00,1.50"); out.newLine();
+		  	out.write("STONEAXE=275,3.00,1.50"); out.newLine();
+		  	out.write("DIAMONDSWORD=276,100.50,50.25"); out.newLine();
+		  	out.write("DIAMONDSHOVEL=277,100.50,50.25"); out.newLine();
+		  	out.write("DIAMONDPICKAXE=278,151.00,75.50"); out.newLine();
+		  	out.write("DIAMONDAXE=279,151.00,75.50"); out.newLine();
+		  	out.write("STICK=280,0.20,0.10"); out.newLine();
+		  	out.write("BOWL=281,1.50,0.75"); out.newLine();
+		  	out.write("MUSHROOMSOUP=282,1.50,0.75"); out.newLine();
+		  	out.write("GOLDSWORD=283,0,0"); out.newLine();
+		  	out.write("GOLDSHOVEL=284,0,0"); out.newLine();
+		  	out.write("GOLDPICKAXE=285,0,0"); out.newLine();
+		  	out.write("GOLDAXE=286,0,0"); out.newLine();
+		  	out.write("STRING=287,0.50,0.25"); out.newLine();
+		  	out.write("FEATHER=288,0.50,0.25"); out.newLine();
+		  	out.write("SULPHUR=289,0,0"); out.newLine();
+		  	out.write("GUNPOWDER=289,0,0"); out.newLine();
+		  	out.write("WOODENHOE=290,1.00,0.50"); out.newLine();
+		  	out.write("STONEHOE=291,2.00,1.00"); out.newLine();
+		  	out.write("IRONHOE=292,16.00,8.00"); out.newLine();
+		  	out.write("DIAMONDHOE=293,100.50,50.25"); out.newLine();
+		  	out.write("GOLDHOE=294,0,0"); out.newLine();
+		  	out.write("SEEDS=295,0.50,0.25"); out.newLine();
+		  	out.write("WHEAT=296,1.50,0.75"); out.newLine();
+		  	out.write("BREAD=297,4.50,2.25"); out.newLine();
+		  	out.write("LEATHERHELMET=298,5.00,2.50"); out.newLine();
+		  	out.write("LEATHERCHESTPLATE=299,8.00,4.00"); out.newLine();
+		  	out.write("LEATHERLEGGINGS=300,7.00,3.50"); out.newLine();
+		  	out.write("LEATHERPANTS=300,7.00,3.50"); out.newLine();
+		  	out.write("LEATHERBOOTS=301,4.00,2.00"); out.newLine();
+		  	out.write("CHAINMAILHELMET=302,12.00,6.00"); out.newLine();
+		  	out.write("CHAINMAILCHESTPLATE=303,16.00,8.00"); out.newLine();
+		  	out.write("CHAINMAILLEGGING=304,14.00,7.00"); out.newLine();
+		  	out.write("CHAINMAILPANTS=304,14.00,7.00"); out.newLine();
+		    out.write("CHAINMAILBOOTS=305,8.00,4.00"); out.newLine();
+		    out.write("IRONHELMET=306,25.00,12.50"); out.newLine();
+		    out.write("IRONCHESTPLATE=307,40.00,20.00"); out.newLine();
+		    out.write("IRONLEGGINGS=308,35.00,17.50"); out.newLine();
+		    out.write("IRONPANTS=308,35.00,17.50"); out.newLine();
+		    out.write("IRONBOOTS=309,20.00,10.00"); out.newLine();
+		    out.write("DIAMONDHELMET=310,250.00,175.00"); out.newLine();
+		    out.write("DIAMONDCHESTPLATE=311,400.00,200.00"); out.newLine();
+		    out.write("DIAMONDLEGGINGS=312,350.00,175.00"); out.newLine();
+		    out.write("DIAMONDPANTS=312,350.00,175.00"); out.newLine();
+		    out.write("DIAMONDBOOTS=313,200.00,100.00"); out.newLine();
+		    out.write("GOLDHELMET=314,0,0"); out.newLine();
+		    out.write("GOLDCHESTPLATE=315,0,0"); out.newLine();
+		    out.write("GOLDLEGGINGS=316,0,0"); out.newLine();
+		    out.write("GOLDPANTS=316,0,0"); out.newLine();
+		    out.write("GOLDBOOTS=317,0,0"); out.newLine();
+		    out.write("FLINT=318,0.25,0.12"); out.newLine();
+		    out.write("RAWPORKCHOP=319,1.50,0.75"); out.newLine();
+		    out.write("COOKEDPORKCHOP=320,3.00,1.50"); out.newLine();
+		    out.write("PAINTING=321,9.00,4.50"); out.newLine();
+		    out.write("GOLDENAPPLE=322,5.00,2.50"); out.newLine();
+		    out.write("SIGN=323,3.50,1.75"); out.newLine();
+		    out.write("WOODDOOR=324,3.00,1.75"); out.newLine();
+		    out.write("BUCKET=325,15.00,7.50"); out.newLine();
+		    out.write("WATERBUCKET=326,15.50,7.75"); out.newLine();
+		    out.write("LAVABUCKET=327,17.00,8.50"); out.newLine();
+		    out.write("MINECART=328,25.00,12.50"); out.newLine();
+		    out.write("SADDLE=329,2.00,1.00"); out.newLine();
+		    out.write("IRONDOOR=330,30.00,15.00"); out.newLine();
+		    out.write("REDSTONE=331,1.50,0.75"); out.newLine();
+		    out.write("SNOWBALL=332,0.20,0.10"); out.newLine();
+		    out.write("BOAT=333,5.00,2.50"); out.newLine();
+		    out.write("LEATHER=334,0.50,0.25"); out.newLine();
+		    out.write("MILKBUCKET=335,16.00,8.00"); out.newLine();
+		    out.write("CLAYBRICK=336,1.25,0.82"); out.newLine();
+		    out.write("CLAYBALLS=337,1.00,0.50"); out.newLine();
+		    out.write("SUGARCANE=338,1.00,0.50"); out.newLine();
+		    out.write("PAPER=339,2.00,1.00"); out.newLine();
+		    out.write("BOOK=340,6.00,3.00"); out.newLine();
+		    out.write("SLIMEBALL=341,0.50,0.25"); out.newLine();
+		    out.write("STORAGEMINECART=342,29.00,14.50"); out.newLine();
+		    out.write("POWEREDMINECART=343,33.00,16.50"); out.newLine();
+		    out.write("EGG=344,1.00,0.50"); out.newLine();
+		    out.write("COMPASS=345,21.50,10.75"); out.newLine();
+		    out.write("FISHINGROD=346,3.00,1.50"); out.newLine();
+		    out.write("CLOCK=347,150.00,75.00"); out.newLine();
+		    out.write("GLOWSTONEDUST=348,6.00,3.00"); out.newLine();
+		    out.write("RAWFISH=349,1.50,0.75"); out.newLine();
+		    out.write("COOKEDFISH=350,2.50,1.25"); out.newLine();
+		    out.write("INKSACK=351,0.50,0.25"); out.newLine();
+		    out.write("BLACKDYE=351,0.50,0.25"); out.newLine();
+		    out.write("ROSERED=351:1,0.50,0.25"); out.newLine();
+		    out.write("REDDYE=351:1,0.50,0.25"); out.newLine();
+		    out.write("CACTUSGREEN=351:2,0.50,0.25"); out.newLine();
+		    out.write("GREENDYE=351:2,0.50,0.25"); out.newLine();
+		    out.write("COCOBEANS=351:3,0.50,0.25"); out.newLine();
+		    out.write("BROWNDYE=351:3,0.50,0.25"); out.newLine();
+		    out.write("LAPISLAZULI=351:4,0.50,0.25"); out.newLine();
+		    out.write("BLUEDYE=351:4,0.50,0.25"); out.newLine();
+		    out.write("PURPLEDYE=351:5,0.50,0.25"); out.newLine();
+		    out.write("CYANDYE=351:6,0.50,0.25"); out.newLine();
+		    out.write("LIGHTGRAYDYE=351:7,0.50,0.25"); out.newLine();
+		    out.write("GRAYDYE=351:8,0.50,0.25"); out.newLine();
+		    out.write("PINKDYE=351:9,0.50,0.25"); out.newLine();
+		    out.write("LIMEDYE=351:10,0.50,0.25"); out.newLine();
+		    out.write("LIGHTGREENDYE=351:10,0.50,0.25"); out.newLine();
+		    out.write("DANDELIONYELLOW=351:11,0.50,0.25"); out.newLine();
+		    out.write("YELLOWDYE=351:11,0.50,0.25"); out.newLine();
+		    out.write("LIGHTBLUEDYE=351:12,0.50,0.25"); out.newLine();
+		    out.write("MAGENTADYE=351:13,0.50,0.25"); out.newLine();
+		    out.write("ORANGEDYE=351:14,0.50,0.25"); out.newLine();
+		    out.write("BONEMEAL=351:15,0.50,0.25"); out.newLine();
+		    out.write("WHITEDYE=351:15,0.50,0.25"); out.newLine();
+		    out.write("BONE=352,2.50,1.25"); out.newLine();
+		    out.write("SUGAR=353,1.00,0.50"); out.newLine();
+		    out.write("CAKE=354,10.00,5.00"); out.newLine();
+		    out.write("BED=355,16.50,8.25"); out.newLine();
+		    out.write("REDSTONEREPEATER=356,11.50,5.75"); out.newLine();
+		    out.write("COOKIE=357,0.50,0.25"); out.newLine();
+		    out.write("MAP=358,0,0"); out.newLine();
+		    out.write("SHEARS=359,10.00,5.00"); out.newLine();
+		    out.write("MELONSLICE=360,3.00,1.50"); out.newLine();
+		    out.write("PUMPKINSEEDS=361,0.75,0.38"); out.newLine();
+		    out.write("MELONSEEDS=362,0.75,0.38"); out.newLine();
+		    out.write("RAWBEEF=363,1.00,0.50"); out.newLine();
+		    out.write("STEAK=364,2.50,1.25"); out.newLine();
+		    out.write("RAWCHICKEN=365,1.00,0.50"); out.newLine();
+		    out.write("COOKEDCHICKEN=366,2.50,1.25"); out.newLine();
+		    out.write("ROTTENFLESH=367,0,0"); out.newLine(); 
+		    out.write("ENDERPERL=368,2.00,1.00"); out.newLine();
+		    out.write("BLAZEROD=369,5.00,2.50"); out.newLine();
+		    out.write("GHASTTEAR=370,1.50,0.75"); out.newLine();
+		    out.write("GOLDNUGGET=371,2.50,1.25"); out.newLine();
+		    out.write("NETHERWARTSEEDS=372,0.50,0.25"); out.newLine();
+		    out.write("POTION=373,300.00,150.00"); out.newLine();
+		    out.write("GLASSBOTTLE=374,40.00,20.00"); out.newLine();
+		    out.write("SPIDEREYE=375,3.00,1.50"); out.newLine();
+		    out.write("FERMENTEDSPIDEREYE=376,6.00,3.00"); out.newLine();
+		    out.write("BLAZEPOWDER=377,3.00,1.50"); out.newLine();
+		    out.write("MAGMACREAM=378,2.00,1.00"); out.newLine();
+		    out.write("GOLDMUSICDISC=2256,25.00,12.50"); out.newLine();
+		    out.write("GREENMUSICDISC=2257,25.00,12.50"); out.newLine();
+		    out.close();
+		}catch (IOException ioe){
+			log.severe("[dExchange] - Unable to create Items File");
+		}
+		return;
+	}
+}
