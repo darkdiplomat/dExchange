@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class dExchange extends Plugin {
 
 	String name = "dExchange";
-	String version = "1.4.1";
+	String version = "1.4.2";
 	String author = "Darkdiplomat";
 	static Logger log = Logger.getLogger("Minecraft");
 	

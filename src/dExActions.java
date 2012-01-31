@@ -562,7 +562,7 @@ public class dExActions {
 		return room;
 	}
 	
-	public void addItem(Inventory inv, int ID, int Damage, int amount, int size){
+	private void addItem(Inventory inv, int ID, int Damage, int amount, int size){
 		for (int i = 0; i < size; i++){
 			if (amount > 0){
 				Item item = inv.getItemFromSlot(i);
@@ -571,17 +571,25 @@ public class dExActions {
 					if (item.getItemId() == ID){
 						if (item.getDamage() == Damage){
 							if (amount > 64){
-								if(item.getAmount() < 64){
+								if(iam < amount){
 									item.setAmount(64);
-									inv.update();
-									amount -= iam;
+									amount -= (64 - iam);
+								}
+								else{
+									if(iam < amount){
+										item.setAmount(iam+amount);
+										amount -= (64 - iam);
+									}
 								}
 							}
 							else{
-								if(iam < 64){
+								if(iam < 64 && (iam+amount < 64)){
 									item.setAmount(iam+amount);
-									inv.update();
-									amount -= iam;
+									amount -= (64 - iam);
+								}
+								else{
+									item.setAmount(64);
+									amount -= (64-iam);
 								}
 							}
 						}
@@ -590,13 +598,11 @@ public class dExActions {
 				else{
 					if (amount > 64){
 						inv.setSlot(ID, 64, Damage, i);
-						inv.update();
 						amount -= 64;
 					}
 					else{
 						inv.setSlot(ID, amount, Damage, i);
-						inv.update();
-						break;
+						amount = 0;
 					}
 				}
 			}
