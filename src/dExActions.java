@@ -23,9 +23,15 @@ import java.util.HashMap;
 */
 
 public class dExActions {
-	dExData dExD = dExchange.dExD;
+	dExchange dEx;
+	dExData dExD;
 	HashMap<Player, String> SAC = new HashMap<Player, String>();
 	HashMap<Player, Double> SPC = new HashMap<Player, Double>();
+	
+	public dExActions(dExchange dEx){
+		this.dEx = dEx;
+		dExD = dEx.dExD;
+	}
 	
 	public boolean BuyCommand(Player player, String Item, String Amount, boolean stack){
 		int[] ID = dExD.getItemId(Item.toUpperCase());
@@ -228,9 +234,12 @@ public class dExActions {
 				Item = dExD.reverseItemLookUp(Integer.valueOf(its[0]), Integer.valueOf(its[1]));
 				check = 0;
 			}
+			else{
+				check = 0;
+			}
 		}
 		if(check != 0){
-			Item = dExD.reverseItemLookUp(1, 0);
+			Item = dExD.reverseItemLookUp(check, 0);
 		}
 		ID = dExD.getItemId(Item.toUpperCase());
 		int a = 0;
@@ -460,7 +469,7 @@ public class dExActions {
 			int Amount = 0;
 			int room = 0;
 			int pAm = 0;
-			double price = Double.valueOf(sign.getText(2));
+			double price = Double.valueOf(sign.getText(2).replace(",", "."));
 			if(IDA.length == 2){
 				try{
 					Amount = Integer.valueOf(IDA[1]);
@@ -488,7 +497,7 @@ public class dExActions {
 				room = Amount;
 			}
 			price *= room;
-			if (price > getPlayerBalance(sign.getText(3))){
+			if (price > getPlayerBalance(pname)){
 				return dExD.ErrorMessage(player, 127);
 			}
 			if(chest.findAttachedChest() != null){
@@ -515,6 +524,89 @@ public class dExActions {
 			dExD.logAct(312, player.getName(), pname, "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(room), "");
 		}
 		return true;
+	}
+	
+	public boolean ServerBuySign(Player player, Sign sign, Chest chest){
+		String Item = sign.getText(1);
+		int[] ID = new int[2];
+		int check = 0;
+		try{
+			check = Integer.parseInt(Item);
+		}catch (NumberFormatException nfe){
+			if (Item.contains(":")){
+				String[] its = Item.split(":");
+				Item = dExD.reverseItemLookUp(Integer.valueOf(its[0]), Integer.valueOf(its[1]));
+				check = 0;
+			}
+			else{
+				check = 0;
+			}
+		}
+		if(check != 0){
+			Item = dExD.reverseItemLookUp(check, 0);
+		}
+		ID = dExD.getItemId(Item.toUpperCase());
+		int a = 0;
+		double price = 0;
+		double globacc = dExD.globalaccountbalance();
+		if(ID[0] < 1){
+			return dExD.ErrorMessage(player, 112);
+		}
+		a = Integer.valueOf(sign.getText(2));
+		price = dExD.getItemBuyPrice(Item.toUpperCase());
+		if(price == -1){
+			return dExD.ErrorMessage(player, 105);
+		}
+		if(price == -2){
+			return dExD.ErrorMessage(player, 106);
+		}
+		if(price == 0){
+			return dExD.ErrorMessage(player, 107);
+		}
+		price *= a;
+		Inventory invC = chest;
+		Inventory invP = player.getInventory();
+		if(chest.findAttachedChest() != null){
+			DoubleChest dchest = (DoubleChest)player.getWorld().getComplexBlock(chest.getX(), chest.getY(), chest.getZ());
+			invC = (Inventory)dchest;
+			if (!hasItem(invC, ID[0], ID[1], a, invC.getContentsSize())){
+				return dExD.ErrorMessage(player, 126);
+			}
+			if(!hasRoom(invP, ID[0], ID[1], a, 36)){
+				return dExD.ErrorMessage(player, 121);
+			}
+			if (price > getPlayerBalance(player.getName())){
+				return dExD.ErrorMessage(player, 122);
+			}
+			if((globacc != -2) && (globacc != -1)){
+				dExD.payglobalaccount(price);
+			}
+			removeItem(invC, ID[0], ID[1], a, invC.getContentsSize());
+			addItem(invP, ID[0], ID[1], a, 36);
+		}
+		else{
+			if (!hasItem(invC, ID[0], ID[1], a, invC.getContentsSize())){
+				return dExD.ErrorMessage(player, 126);
+			}
+			if(!hasRoom(invP, ID[0], ID[1], a, 36)){
+				return dExD.ErrorMessage(player, 121);
+			}
+			if (price > getPlayerBalance(player.getName())){
+				return dExD.ErrorMessage(player, 122);
+			}
+			if((globacc != -2) && (globacc != -1)){
+				dExD.payglobalaccount(price);
+			}
+			removeItem(invC, ID[0], ID[1], a, invC.getContentsSize());
+			addItem(invP, ID[0], ID[1], a, 36);
+		}
+		chargePlayer(player.getName(), price);
+		String L1 = dExD.pmessage(208, String.valueOf(a), Item.toUpperCase());
+		String L2 = dExD.pmessage(206, priceForm(price), "");
+		player.sendMessage(L1);
+		player.sendMessage(L2);
+		dExD.logAct(309, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(a), "");
+		return true; 
 	}
 	
 	public boolean hasRoom(Inventory inv, int ID, int Damage, int amount, int size){
@@ -866,7 +958,7 @@ public class dExActions {
 			return dExD.ErrorMessage(player, 115);
 		}
 		try{
-			price = Double.parseDouble(sign.getText(2));
+			price = Double.parseDouble(sign.getText(2).replace(",", "."));
 		}catch(NumberFormatException nfe){
 			return dExD.ErrorMessage(player, 116);
 		}
@@ -978,7 +1070,7 @@ public class dExActions {
 			return dExD.ErrorMessage(player, 115);
 		}
 		try{
-			price = Double.parseDouble(sign.getText(2));
+			price = Double.parseDouble(sign.getText(2).replace(",", "."));
 		}catch(NumberFormatException nfe){
 			return dExD.ErrorMessage(player, 116);
 		}
@@ -1002,12 +1094,73 @@ public class dExActions {
 		return false;
 	}
 	
+	public boolean makeSShop(Player player, Sign sign){ //TODO Correct Amount?
+		int idsign = 0;
+		if((!player.canUseCommand("/dexpsss"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
+			return dExD.ErrorMessage(player, 101);
+		}
+		if (sign.getText(1).equals("")){
+			return dExD.ErrorMessage(player, 103);
+		}
+		if(sign.getText(2).equals("")){
+			return dExD.ErrorMessage(player, 104);
+		}
+		double price = 0;
+		String idcheck = sign.getText(1);
+		String[] idsplit = idcheck.split(":");
+		String name = sign.getText(1).toUpperCase();
+		int amount = 0;
+		if (idsplit.length == 1){ idsplit = new String[]{idsplit[0], String.valueOf(0)}; }
+		try{
+			idsign = Integer.parseInt(idsplit[0]);
+		}catch (NumberFormatException nfe){
+			idsign = -1;
+			int[] ID = dExD.getItemId(sign.getText(1).toUpperCase());
+			if(ID[0] == -1){
+				return dExD.ErrorMessage(player, 112);
+			}
+		}
+		if (idsign != -1){
+			name = dExD.reverseItemLookUp(Integer.valueOf(idsplit[0]), Integer.valueOf(idsplit[1]));
+			if (name == null){ return dExD.ErrorMessage(player, 112); }
+			price = dExD.getItemBuyPrice(name);
+		}
+		else{
+			name = sign.getText(1).toUpperCase();
+			price = dExD.getItemBuyPrice(sign.getText(1).toUpperCase());
+		}
+		if(price == -1){
+			return dExD.ErrorMessage(player, 105);
+		}
+		if(price == -2){
+			return dExD.ErrorMessage(player, 106);
+		}
+		if(price == 0){
+			return dExD.ErrorMessage(player, 107);
+		}
+		try{
+			amount = Integer.parseInt(sign.getText(2));
+		}catch (NumberFormatException nfe){
+			return dExD.ErrorMessage(player, 108);
+		}
+		if (amount < 1){
+			return dExD.ErrorMessage(player, 108);
+		}
+		sign.setText(0, "§7[S-SHOP]");
+		sign.setText(3, "SERVER");
+		dExD.openlink(player, sign);
+		String mess = dExD.pmessage(203, "", "");
+		player.sendMessage(mess);
+		//dExD.logAct(301, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		return false;
+	}
+	
 	public boolean setSignPrice(Player player, String price){
 		if(SPC.containsKey(player)){ return dExD.ErrorMessage(player, 129); }
 		if(SAC.containsKey(player)){ return dExD.ErrorMessage(player, 130); }
 		double newprice = 0;
 		try{
-			newprice = Double.parseDouble(price);
+			newprice = Double.parseDouble(price.replace(",", "."));
 		}catch(NumberFormatException nfe){
 			return dExD.ErrorMessage(player, 116);
 		}
@@ -1130,7 +1283,7 @@ public class dExActions {
 		if(!dExD.IDD.containsKey(IName.toUpperCase())){ return dExD.ErrorMessage(player, 112); }
 		double bp = 0;
 		try{
-			bp = Double.parseDouble(BPrice);
+			bp = Double.parseDouble(BPrice.replace(",", "."));
 		}catch(NumberFormatException NFE){
 			return dExD.ErrorMessage(player, 116);
 		}
@@ -1146,7 +1299,7 @@ public class dExActions {
 		if(!dExD.IDD.containsKey(IName.toUpperCase())){ return dExD.ErrorMessage(player, 112); }
 		double sp = 0;
 		try{
-			sp = Double.parseDouble(SPrice);
+			sp = Double.parseDouble(SPrice.replace(",", "."));
 		}catch(NumberFormatException NFE){
 			return dExD.ErrorMessage(player, 116);
 		}

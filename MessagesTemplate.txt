@@ -80,3 +80,4 @@
 316-ItemRemoved=<P1> removed Name:<T> from Global Lists
 317-BPriceUpdate=<P1> updated Buy Price for Name:<T> to <PR>
 318-SPriceUpdate=<P1> updated Sell Price for Name:<T> to <PR>
+319-SSUsed=<P1> used S-SHOP sign at X:<SX> Y:<SY> Z:<SZ> W:<SW> to purchase <A> of <I>

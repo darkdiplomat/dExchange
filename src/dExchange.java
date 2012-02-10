@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -24,13 +29,14 @@ import java.util.logging.Logger;
 public class dExchange extends Plugin {
 
 	String name = "dExchange";
-	String version = "1.4.2";
+	String version = "1.5 (Beta 1)";
+	String CurrVer = "1.5 (Beta 1)";
 	String author = "Darkdiplomat";
 	static Logger log = Logger.getLogger("Minecraft");
 	
-	static dExData dExD = new dExData();
-	static dExActions dExA = new dExActions();
-	static dExListener dExL = new dExListener();
+	dExData dExD = new dExData();
+	dExActions dExA = new dExActions(this);
+	dExListener dExL = new dExListener(this);
 
 	public void initialize() {
 		etc.getLoader().addListener( PluginLoader.Hook.COMMAND, dExL, this, PluginListener.Priority.MEDIUM);
@@ -55,6 +61,9 @@ public class dExchange extends Plugin {
 	}
 	
 	public void enable() {
+		if(!isLatest()){
+			log.info("[dExchange] - There is an update available! Current = " + CurrVer);
+		}
 		etc.getInstance().addCommand("/dex", "<buy/sell> <item> <amount> - buy or sell items");
 		etc.getInstance().addCommand("/dex list", " - list prices and items");
 		etc.getInstance().addCommand("/dex <item>","- display info on the item");
@@ -65,5 +74,31 @@ public class dExchange extends Plugin {
 		etc.getInstance().addCommand("/dex additem"," <Name> <ID> <Damage> <BuyPrice> <SellPrice> - Adds Item to List");
 		etc.getInstance().addCommand("/dex removeitem"," <Name> - Removes Item from Global Lists");
 		log.info( name + " version " + version + " by " + author + " is enabled!" );
+	}
+	
+	public boolean isLatest(){
+		String address = "http://www.visualillusionsent.net/cmod_plugins/Versions.html";
+		URL url = null;
+		try {
+			url = new URL(address);
+		} catch (MalformedURLException e) {
+			return true;
+		}
+		String[] Vpre = new String[1]; 
+		BufferedReader in;
+		try {
+			in = new BufferedReader(new InputStreamReader(url.openStream()));
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) {
+				if (inputLine.contains("dExchange=")){
+					Vpre = inputLine.split("=");
+					CurrVer = Vpre[1].replace("</p>", "");
+				}
+			}
+			in.close();
+		} catch (IOException e) {
+			return true;
+		}
+		return (version.equals(CurrVer));
 	}
 }
