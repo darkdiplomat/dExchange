@@ -868,16 +868,8 @@ public class dExData {
 			}
 		}
 		else{
-			//REFACTOR
-			fu.removeLineFromFile(IF, OldLine);
-			try {
-				BufferedWriter out = new BufferedWriter(new FileWriter(IF, true));
-				out.newLine();
-				out.write(NewLine);
-				out.close();
-			} catch (IOException e) {
-				log.severe("[dExhange] - Unable to add Item to Item Lists!");
-			}
+			PropertiesFile ITF = new PropertiesFile(IF);
+			ITF.setString(IName, idd[0]+","+priceForm(bp)+","+priceForm(sp));
 		}
 		BuyPrice.put(IName, bp);
 		WholeList.remove(OldLine);
@@ -926,15 +918,8 @@ public class dExData {
 			}
 		}
 		else{
-			fu.removeLineFromFile(IF, OldLine);
-			try {
-				BufferedWriter out = new BufferedWriter(new FileWriter(IF,true));
-				out.newLine();
-				out.write(NewLine);
-				out.close();
-			} catch (IOException e) {
-				log.severe("[dExhange] - Unable to add Item to Item Lists!");
-			}
+			PropertiesFile ITF = new PropertiesFile(IF);
+			ITF.setString(IName, idd[0]+","+priceForm(bp)+","+priceForm(sp));
 		}
 		SellPrice.put(IName, sp);
 		WholeList.remove(OldLine);
@@ -979,7 +964,8 @@ public class dExData {
 			}
 		}
 		else{
-			fu.removeLineFromFile(IF, Line);
+			PropertiesFile ITF = new PropertiesFile(IF);
+			ITF.removeKey(IName);
 		}
 		IDD.remove(IName);
 		BuyPrice.remove(IName);

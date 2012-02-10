@@ -37,7 +37,7 @@ public class FileUtility{
 			br.close();
 
 			if (!inFile.delete()) {
-				log.severe("[dExchange] Could not delete file"+file);
+				log.severe("[dExchange] Could not delete file "+file);
 				return;
 			}
 	
