@@ -19,8 +19,6 @@
 * along with dExchange.  If not, see http://www.gnu.org/licenses/gpl.html
 */
 
-//TODO Need to do messages for S-SHOP, Need to do S-TRADE?, Need to possible do PI-SHOP or PI-TRADE? (Player Inventory), Possible add chests to Commands?
-
 public class dExListener extends PluginListener {
 	dExchange dEx;
 	dExActions dExA;
@@ -37,7 +35,7 @@ public class dExListener extends PluginListener {
 		if (cmd[0].equals("/dex")){
 			if(cmd.length > 1){
 				if (cmd[1].equals("buy")){
-					if((player.canUseCommand("/dexbc"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+					if( player.canUseCommand("/dexbc") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 						if(cmd.length < 4){
 							player.notify("Usage: /dex buy <item> <amount>");
 							return true;
@@ -57,7 +55,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if(cmd[1].equals("sell")){
-					if((player.canUseCommand("/dexsc"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+					if( player.canUseCommand("/dexsc") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 						if(cmd.length < 4){
 							player.notify("Usage: /dex sell <item> <amount>");
 							return true;
@@ -85,7 +83,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if((cmd[1].equalsIgnoreCase("ppricechange"))||(cmd[1].equalsIgnoreCase("ppc"))){
-					if((player.canUseCommand("/dexppc"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+					if( player.canUseCommand("/dexppc") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 						if(cmd.length > 2){
 							if(cmd[2].equalsIgnoreCase("CANCEL")){
 								return dExA.cancelSignChange(player, false, false);
@@ -101,7 +99,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if((cmd[1].equalsIgnoreCase("pamountchange"))||(cmd[1].equalsIgnoreCase("pac"))){
-					if((player.canUseCommand("/dexpac"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+					if( player.canUseCommand("/dexpac") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 						if(cmd.length > 2){
 							if(cmd[2].equalsIgnoreCase("CANCEL")){
 								return dExA.cancelSignChange(player, true, false);
@@ -117,7 +115,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if(cmd[1].equalsIgnoreCase("additem")){
-					if(player.canUseCommand("/dexadmin")){
+					if( player.canUseCommand("/dexadmin") ){
 						if(cmd.length > 6){
 							return dExA.addItemList(player, cmd[2], cmd[3], cmd[4], cmd[5], cmd[6]);
 						}
@@ -128,7 +126,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if(cmd[1].equalsIgnoreCase("cisp")){
-					if(player.canUseCommand("/dexadmin")){
+					if( player.canUseCommand("/dexadmin") ){
 						if(cmd.length > 3){
 							return dExA.updateItemSPrice(player, cmd[2], cmd[3]);
 						}
@@ -139,7 +137,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if(cmd[1].equalsIgnoreCase("cibp")){
-					if(player.canUseCommand("/dexadmin")){
+					if( player.canUseCommand("/dexadmin") ){
 						if(cmd.length > 3){
 							return dExA.updateItemBPrice(player, cmd[2], cmd[3]);
 						}
@@ -150,7 +148,7 @@ public class dExListener extends PluginListener {
 					}
 				}
 				else if(cmd[1].equalsIgnoreCase("removeItem")){
-					if(player.canUseCommand("/dexadmin")){
+					if( player.canUseCommand("/dexadmin") ){
 						if(cmd.length > 2){
 							return dExA.removeItemFromList(player, cmd[2]);
 						}
@@ -183,20 +181,10 @@ public class dExListener extends PluginListener {
 			return dExA.makeGTrade(player, sign);
 		}
 		else if(sign.getText(0).equalsIgnoreCase("[P-SHOP]")){
-			if(!dExD.canmakemore(player)){
-				return true;
-			}
-			else{
-				return dExA.makePShop(player, sign);
-			}
+			return dExA.makePShop(player, sign);
 		}
 		else if(sign.getText(0).equalsIgnoreCase("[P-TRADE]")){
-			if(!dExD.canmakemore(player)){
-				return true;
-			}
-			else{
-				return dExA.makePTrade(player, sign);
-			}
+			return dExA.makePTrade(player, sign);
 		}
 		else if(sign.getText(0).equalsIgnoreCase("[S-SHOP]")){
 			return dExA.makeSShop(player, sign);
@@ -209,14 +197,19 @@ public class dExListener extends PluginListener {
 			if(dExD.checklink(player)){
 				etc.getServer().getWorld(player.getLocation().dimension).setBlockAt(54, blockPlaced.getX(), blockPlaced.getY(), blockPlaced.getZ());
 				blockPlaced.update();
-				Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(blockPlaced);
 				itemInHand.setAmount(itemInHand.getAmount()-1);
+				Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(blockPlaced);
 				player.getInventory().update();
 				dExD.closelink(player, chest);
 				String mess = dExD.pmessage(204, "", "");
 				player.sendMessage(mess);
 				dExD.logAct(302, player.getName(),"", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
 				return true;
+			}
+			else if(scanchest(player, blockPlaced)){
+				if(isChestOwner(player, blockPlaced)){
+					return dExD.ErrorMessage(player, 136);
+				}
 			}
 		}
 		return false;
@@ -226,19 +219,20 @@ public class dExListener extends PluginListener {
 		if (block.getType() == 54){
 			if(dExD.checklink(player)){
 				if(!isChestOwner(player, block)){
-					player.notify("This chest is protected and you do not own it!");
-					return true;
+					return dExD.ErrorMessage(player, 137);
 				}
 				Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block);
 				if(isDEXChest(player, chest)){
-					player.notify("This chest is part of a link you do not own!");
-					return true;
+					return dExD.ErrorMessage(player, 138);
 				}
 				dExD.closelink(player, chest);
 				String mess = dExD.pmessage(204, "", "");
 				player.sendMessage(mess);
 				dExD.logAct(302, player.getName(),"", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
 				return true;
+			}
+			else{
+				
 			}
 		}
 		else if((block.getType() == 63) || (block.getType() == 68)){
@@ -248,13 +242,13 @@ public class dExListener extends PluginListener {
 				pname = dExD.NameFix(sign.getText(3));
 			}
 			if(sign.getText(0).equals("§9[P-TRADE]")||sign.getText(0).equals("§5[P-SHOP]")){
-				if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-					if(dExA.SPC.containsKey(player)||dExA.SAC.containsKey(player)){
+				if( player.getName().equals(pname) || player.canUseCommand("/dexadmin") ){
+					if( dExA.SPC.containsKey(player) || dExA.SAC.containsKey(player) ){
 						return dExA.SignChange(player, sign);
 					}
 				}
 				else{
-					if(dExA.SPC.containsKey(player)||dExA.SAC.containsKey(player)){
+					if( dExA.SPC.containsKey(player) || dExA.SAC.containsKey(player) ){
 						dExA.cancelSignChange(player, false, true);
 						return dExD.ErrorMessage(player, 132);
 					}
@@ -268,7 +262,7 @@ public class dExListener extends PluginListener {
 		if((block.getType() == 63) || (block.getType() == 68)){
 			Sign sign = (Sign)player.getWorld().getComplexBlock(block);
 			if(sign.getText(0).equals("§2[G-TRADE]")){
-				if((player.canUseCommand("/dexugts"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+				if( player.canUseCommand("/dexugts") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Item item = player.getItemStackInHand();
 					return dExA.GobalSignSell(player, item, sign);
 				}
@@ -277,7 +271,7 @@ public class dExListener extends PluginListener {
 				}
 			}
 			else if (sign.getText(0).equals("§1[G-SHOP]")){
-				if((player.canUseCommand("/dexugss"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+				if( player.canUseCommand("/dexugss") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					return dExA.gobalBuySign(player, sign);
 				}
 				else{
@@ -285,7 +279,7 @@ public class dExListener extends PluginListener {
 				}
 			}
 			else if (sign.getText(0).equals("§5[P-SHOP]")){
-				if((player.canUseCommand("/dexupss"))||(player.canUseCommand("/dexadmin"))||(player.canUseCommand("/dexall"))){
+				if( player.canUseCommand("/dexupss") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
 						return dExA.PlayerBuySign(player, sign, chest);
@@ -299,7 +293,7 @@ public class dExListener extends PluginListener {
 				}
 			}
 			else if (sign.getText(0).equals("§9[P-TRADE]")){
-				if(player.canUseCommand("/dexupts")||player.canUseCommand("/dexadmin")||player.canUseCommand("/dexall")){
+				if( player.canUseCommand("/dexupts") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
 						Item item = player.getItemStackInHand();
@@ -314,7 +308,7 @@ public class dExListener extends PluginListener {
 				}
 			}
 			else if (sign.getText(0).equals("§7[S-SHOP]")){
-				if(player.canUseCommand("/dexusss")||player.canUseCommand("/dexadmin")||player.canUseCommand("/dexall")){
+				if( player.canUseCommand("/dexusss") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
 						return dExA.ServerBuySign(player, sign, chest);
@@ -329,98 +323,16 @@ public class dExListener extends PluginListener {
 			}
 		}
 		else if(block.getType() == 54){
-			Sign sign;
 			Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block);
-			if (chest.findAttachedChest() != null){
-				sign = dExD.getSign(chest);
-				if (sign != null){
-					if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-						String pname = sign.getText(3);
-						if(dExD.checkNameFix(sign.getText(3))){
-							pname = dExD.NameFix(sign.getText(3));
-						}
-						if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-							return false;
-						}
-						else{
-							return dExD.ErrorMessage(player, 118);
-						}
-					}
-					else if(sign.getText(0).equals("§7[S-SHOP]")){
-						if((player.canUseCommand("/dexadmin"))){
-							return false;
-						}
-						else{
-							return dExD.ErrorMessage(player, 118);
-						}
-					}
-				}
-				else{
-					Block block2 = null;
-					int x = chest.getX()-2;
-					while((x < chest.getX()+2) && (block2 == null)){
-						x++;
-						int z = chest.getZ();
-						while(z < chest.getZ()+2){
-							block2 = (Block)player.getWorld().getBlockAt(x, chest.getY(), chest.getZ());
-							if(block2.getType() == 54){
-								break;
-							}
-							else{
-								block2 = null;
-								z++;
-							}
-						}
-					}
-					Chest chest2 = (Chest)player.getWorld().getOnlyComplexBlock(block2);
-					sign = dExD.getSign(chest2);
-					if (sign != null){
-						if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-							String pname = sign.getText(3);
-							if(dExD.checkNameFix(sign.getText(3))){
-								pname = dExD.NameFix(sign.getText(3));
-							}
-							if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-								return false;
-							}
-							else{
-								return dExD.ErrorMessage(player, 118);
-							}
-						}
-						else if(sign.getText(0).equals("§7[S-SHOP]")){
-							if((player.canUseCommand("/dexadmin"))){
-								return false;
-							}
-							else{
-								return dExD.ErrorMessage(player, 118);
-							}
-						}
-					}
+			Sign sign = dExD.getSign(chest);
+			if (chest.findAttachedChest() != null && sign == null){
+				if(scanchest(player, chest.getBlock())){
+					return dExD.ErrorMessage(player, 118);
 				}
 			}
 			else{
-				sign = dExD.getSign(chest);
-				if (sign != null){
-					if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-						String pname = sign.getText(3);
-						if(dExD.checkNameFix(sign.getText(3))){
-							pname = dExD.NameFix(sign.getText(3));
-						}
-						if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-							return false;
-						}
-						else{
-							return dExD.ErrorMessage(player, 118);
-						}
-					}
-					else if(sign.getText(0).equals("§7[S-SHOP]")){
-						if((player.canUseCommand("/dexadmin"))){
-							return false;
-						}
-						else{
-							return dExD.ErrorMessage(player, 118);
-						}
-					}
+				if(scansign(player, sign)){
+					return dExD.ErrorMessage(player, 118);
 				}
 			}
 		}
@@ -430,18 +342,18 @@ public class dExListener extends PluginListener {
 	public boolean onBlockBreak(Player player, Block block){
 		if((block.getType() == 63) || (block.getType() == 68)){
 			Sign sign = (Sign)etc.getServer().getWorld(player.getLocation().dimension).getComplexBlock(block);
-			if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
+			if( sign.getText(0).equals("§5[P-SHOP]") || sign.getText(0).equals("§9[P-TRADE]") ){
 				String pname = sign.getText(3);
 				if(dExD.checkNameFix(sign.getText(3))){
 					pname = dExD.NameFix(sign.getText(3));
 				}
-				if ((player.getName().equals(pname) || (player.canUseCommand("/dexadmin")))){
-					dExD.removePlayerSignTotal(dExD.NameFix(sign.getText(3)));
+				if ( player.getName().equals(pname) || player.canUseCommand("/dexadmin") ){
+					dExD.removePlayerSignTotal(pname);
 					if(dExD.checklink(player)){
 						Sign sign2 = dExD.getOpenLinkSign(player);
 						int x = sign.getX(), y = sign.getY(), z = sign.getZ(), w = sign.getWorld().getType().getId();
 						int cx = sign2.getX(), cy = sign2.getY(), cz = sign2.getZ(), cw = sign2.getWorld().getType().getId();
-						if((x == cx)&&(y == cy)&&(z == cz)&&(w == cw)){
+						if( (x == cx) && (y == cy) && (z == cz) && (w == cw) ){
 							dExD.cancellink(player);
 							String mess = dExD.pmessage(205, "", "");
 							player.sendMessage(mess);
@@ -472,72 +384,24 @@ public class dExListener extends PluginListener {
 		else if(block.getType() == 54){
 			Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block);
 			Sign sign = dExD.getSign(chest);
-			if (chest.findAttachedChest() != null){
-				sign = dExD.getSign(chest);
-				if (sign != null){
-					if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-						String pname = sign.getText(3);
-						if(dExD.checkNameFix(sign.getText(3))){
-							pname = dExD.NameFix(sign.getText(3));
-						}
-						if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-							dExD.removeline(sign, chest, true);
-							String mess = dExD.pmessage(211, "", "");
-							player.sendMessage(mess);
-							dExD.logAct(303, player.getName(), "", "CHEST", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getY()), String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
-							return false;
-						}
-						else{
-							return dExD.ErrorMessage(player, 120);
-						}
+			if (chest.findAttachedChest() != null && sign == null){
+				if(!scanchest(player, chest.getBlock())){
+					sign = getscansign(player, block);
+					if(sign != null){
+						dExD.removeline(sign, chest, true);
+						String mess = dExD.pmessage(211, "", "");
+						player.sendMessage(mess);
+						dExD.logAct(303, player.getName(), "", "CHEST", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getY()), String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
+						return false;
 					}
 				}
 				else{
-					Block block2 = null;
-					int x = chest.getX()-2;
-					while((x < chest.getX()+2) && (block2 == null)){
-						x++;
-						int z = chest.getZ();
-						while(z < chest.getZ()+2){
-							block2 = (Block)player.getWorld().getBlockAt(x, chest.getY(), chest.getZ());
-							if(block2.getType() == 54){
-								break;
-							}
-							else{
-								block2 = null;
-								z++;
-							}
-						}
-					}
-					Chest chest2 = (Chest)player.getWorld().getOnlyComplexBlock(block2);
-					sign = dExD.getSign(chest2);
-					if (sign != null){
-						if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-							String pname = sign.getText(3);
-							if(dExD.checkNameFix(sign.getText(3))){
-								pname = dExD.NameFix(sign.getText(3));
-							}
-							if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
-								dExD.removeline(sign, chest, true);
-								String mess = dExD.pmessage(211, "", "");
-								player.sendMessage(mess);
-								dExD.logAct(303, player.getName(), "", "CHEST", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getY()), String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
-								return false;
-							}
-							else{
-								return dExD.ErrorMessage(player, 120);
-							}
-						}
-					}
+					return dExD.ErrorMessage(player, 120);
 				}
 			}
-			else if (sign != null){
-				if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-					String pname = sign.getText(3);
-					if(dExD.checkNameFix(sign.getText(3))){
-						pname = dExD.NameFix(sign.getText(3));
-					}
-					if((player.getName().equals(pname)) || (player.canUseCommand("/dexadmin"))){
+			else{
+				if(sign != null){
+					if(!scansign(player, sign)){
 						dExD.removeline(sign, chest, true);
 						String mess = dExD.pmessage(211, "", "");
 						player.sendMessage(mess);
@@ -556,7 +420,7 @@ public class dExListener extends PluginListener {
 	private boolean isChestOwner(Player player, Block block){
 		boolean isOwner = true, isSet = false;
 		PluginLoader load = etc.getLoader();
-		if(load.getPlugin("ChastityChest") != null && load.getPlugin("ChastityChest").isEnabled()){
+		if( load.getPlugin("ChastityChest") != null && load.getPlugin("ChastityChest").isEnabled() ){
 			try{
 				isOwner = (Boolean)load.callCustomHook("ChastityChest-Check", new Object[]{player});
 				isSet = true;
@@ -574,7 +438,7 @@ public class dExListener extends PluginListener {
 				isSet = false;
 			}
 		}
-		if(load.getPlugin("Realms") != null && load.getPlugin("Realms").isEnabled() && !isSet){
+		if( load.getPlugin("Realms") != null && load.getPlugin("Realms").isEnabled() && !isSet){
 			try{
 				isOwner = (Boolean)load.callCustomHook("Realms-PermissionCheck", new Object[]{"INTERACT", player, block});
 				isSet = true;
@@ -595,66 +459,80 @@ public class dExListener extends PluginListener {
 	
 	private boolean isDEXChest(Player player, Chest chest){
 		Sign sign = dExD.getSign(chest);
-		if (chest.findAttachedChest() != null){
-			if (sign != null){
-				if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-					String pname = sign.getText(3);
-					if(dExD.checkNameFix(sign.getText(3))){
-						pname = dExD.NameFix(sign.getText(3));
-					}
-					if(!player.getName().equals(pname) && !player.canUseCommand("/dexadmin")){
-						return true;
-					}
-				}
+		if (chest.findAttachedChest() != null && sign == null){
+			return scanchest(player, chest.getBlock());
+		}
+		else{
+			if(sign != null){
+				return scansign(player, sign);
 			}
-			else{
-				Block block2 = null;
-				int x = chest.getX()-2;
-				while((x < chest.getX()+2) && (block2 == null)){
-					int z = chest.getZ();
-					while(z < chest.getZ()+2){
-						block2 = (Block)player.getWorld().getBlockAt(x, chest.getY(), chest.getZ());
-						if(block2.getType() == 54){
-							break;
-						}
-						else{
-							block2 = null;
-							z++;
-							x++;
-						}
-					}
-				}
-				Chest chest2 = (Chest)player.getWorld().getOnlyComplexBlock(block2);
-				sign = dExD.getSign(chest2);
-				if (sign != null){
-					if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
-						String pname = sign.getText(3);
-						if(dExD.checkNameFix(sign.getText(3))){
-							pname = dExD.NameFix(sign.getText(3));
-						}
-						if(!player.getName().equals(pname) && !player.canUseCommand("/dexadmin")){
-							return true;
-						}
+		}
+		return false;
+	}
+	
+	private boolean scanchest(Player player, Block block){
+		Block block2 = null;
+		int bx = block.getX(), bz = block.getZ();
+		for(int x = (bx-2); x < (bx+2); x++){
+			for(int z = (bz-2); z < (bz+2); z++){
+				block2 = (Block)player.getWorld().getBlockAt(x, block.getY(), z);
+				if( block2.getType() == 54){
+					if(!(bz == z && bx == x)){
+						break;
 					}
 				}
 			}
 		}
-		else if (sign != null){
-			if((sign.getText(0).equals("§5[P-SHOP]")) || (sign.getText(0).equals("§9[P-TRADE]"))){
+		if(block2.getType() == 54){
+			Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block2);
+			Sign sign = dExD.getSign(chest);
+			if (sign != null){
+				return scansign(player, sign);
+			}
+		}
+		return false;
+	}
+	
+	private boolean scansign(Player player, Sign sign){
+		if(sign != null){
+			if( sign.getText(0).equals("§5[P-SHOP]") || sign.getText(0).equals("§9[P-TRADE]") ){
 				String pname = sign.getText(3);
 				if(dExD.checkNameFix(sign.getText(3))){
 					pname = dExD.NameFix(sign.getText(3));
 				}
-				if(!player.getName().equals(pname) && !player.canUseCommand("/dexadmin")){
+				if( !player.getName().equals(pname) && !player.canUseCommand("/dexadmin") ){
 					return true;
 				}
 			}
 			else if(sign.getText(0).equals("§7[S-SHOP]")){
-				if(!player.canUseCommand("/dexpsss") && !player.canUseCommand("/dexadmin") && !player.canUseCommand("/dexall")){
+				if( !player.canUseCommand("/dexpsss") && !player.canUseCommand("/dexadmin") && !player.canUseCommand("/dexall")){
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+	
+	private Sign getscansign(Player player, Block block){
+		Block block2 = null;
+		int bx = block.getX(), bz = block.getZ();
+		for(int x = (bx-2); x < (bx+2); x++){
+			for(int z = (bz-2); z < (bz+2); z++){
+				block2 = (Block)player.getWorld().getBlockAt(x, block.getY(), z);
+				if( block2.getType() == 54){
+					if(!(bz == z && bx == x)){
+						break;
+					}
+				}
+			}
+		}
+		if(block2.getType() == 54){
+			Chest chest2 = (Chest)player.getWorld().getOnlyComplexBlock(block2);
+			Sign sign = dExD.getSign(chest2);
+			if (sign != null){
+				return sign;
+			}
+		}
+		return null;
 	}
 }

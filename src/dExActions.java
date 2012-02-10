@@ -605,7 +605,7 @@ public class dExActions {
 		String L2 = dExD.pmessage(206, priceForm(price), "");
 		player.sendMessage(L1);
 		player.sendMessage(L2);
-		dExD.logAct(309, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(a), "");
+		dExD.logAct(319, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(a), "");
 		return true; 
 	}
 	
@@ -810,66 +810,18 @@ public class dExActions {
 	}
 	
 	public boolean makeGShop(Player player, Sign sign){
-		int idsign = 0;
-		if((!player.canUseCommand("/dexpgss"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
-			return dExD.ErrorMessage(player, 101);
+		if(GSfailchecks(player, sign)){ 
+			return true;
 		}
-		else if (sign.getText(1).equals("")){
-			return dExD.ErrorMessage(player, 103);
-		}
-		else if(sign.getText(2).equals("")){
-			return dExD.ErrorMessage(player, 104);
-		}
-		else{
-			double price = 0;
-			String idcheck = sign.getText(1);
-			String[] idsplit = idcheck.split(":");
-			String name = sign.getText(1).toUpperCase();
-			int amount = 0;
-			if (idsplit.length == 1){ idsplit = new String[]{idsplit[0], String.valueOf(0)}; }
-			try{
-				idsign = Integer.parseInt(idsplit[0]);
-			}catch (NumberFormatException nfe){
-				idsign = -1;
-				int[] ID = dExD.getItemId(sign.getText(1).toUpperCase());
-				if(ID[0] == -1){
-					return dExD.ErrorMessage(player, 112);
-				}
-			}
-			if (idsign != -1){
-				name = dExD.reverseItemLookUp(Integer.valueOf(idsplit[0]), Integer.valueOf(idsplit[1]));
-				if (name == null){ return dExD.ErrorMessage(player, 112); }
-				price = dExD.getItemBuyPrice(name);
-			}
-			else{
-				name = sign.getText(1).toUpperCase();
-				price = dExD.getItemBuyPrice(sign.getText(1).toUpperCase());
-			}
-			if(price == -1){
-				return dExD.ErrorMessage(player, 105);
-			}
-			if(price == -2){
-				return dExD.ErrorMessage(player, 106);
-			}
-			if(price == 0){
-				return dExD.ErrorMessage(player, 107);
-			}
-			try{
-				amount = Integer.parseInt(sign.getText(2));
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 108);
-			}
-			if (amount < 1){
-				return dExD.ErrorMessage(player, 108);
-			}
-			sign.setText(0, "§1[G-SHOP]");
-			sign.setText(1, sign.getText(1).toUpperCase());
-			sign.setText(3, priceForm(price*amount));
-			String mess = dExD.pmessage(201, "", "");
-			player.sendMessage(mess);
-			dExD.logAct(301, player.getName(), "", "G-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
-			return false;
-		}
+		double price = dExD.getItemBuyPrice(sign.getText(1).toUpperCase());
+		int amount = Integer.valueOf(sign.getText(2));
+		sign.setText(0, "§1[G-SHOP]");
+		sign.setText(1, sign.getText(1).toUpperCase());
+		sign.setText(3, priceForm(price*amount));
+		String mess = dExD.pmessage(201, "", "");
+		player.sendMessage(mess);
+		dExD.logAct(301, player.getName(), "", "G-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		return false;
 	}
 	
 	public boolean makeGTrade(Player player, Sign sign){
@@ -889,82 +841,10 @@ public class dExActions {
 	}
 	
 	public boolean makePShop(Player player, Sign sign){
-		int idsign = 0;
-		if((!player.canUseCommand("/dexppss"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
-			return dExD.ErrorMessage(player, 101);
+		if(Pfailchecks(player, sign, false)){
+			return true;
 		}
-		if(dExD.checklink(player)){
-			return dExD.ErrorMessage(player, 109);
-		}
-		if(sign.getText(1).equals("")){
-			return dExD.ErrorMessage(player, 103);
-		}
-		if(sign.getText(2).equals("")){
-			return dExD.ErrorMessage(player, 110);
-		}
-		String IDA = sign.getText(1);
-		String[] IDASplit = IDA.split(":");
-		String name = IDA;
-		int[] IDD = new int[]{0,0};
-		int amount = 0;
-		double price = 0;
-		if (IDASplit.length < 2){
-			return dExD.ErrorMessage(player, 111);
-		}
-		if(IDASplit.length == 2){
-			try{
-				IDD[0] = Integer.parseInt(IDASplit[0]);
-			}catch (NumberFormatException nfe){
-				idsign = -1;
-				IDD = dExD.getItemId(IDASplit[0].toUpperCase());
-				if(IDD[0] == -1){
-					return dExD.ErrorMessage(player, 112);
-				}
-			}
-			if (idsign != -1){
-				name = dExD.reverseItemLookUp(IDD[0],IDD[1]);
-				if (name == null){ return dExD.ErrorMessage(player, 112); }
-			}
-			else{
-				name = sign.getText(1);
-			}
-		}else{
-			try{
-				IDD[0] = Integer.parseInt(IDASplit[0]);
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 113);
-			}
-			if (IDD[0] < 1){
-				return dExD.ErrorMessage(player, 113);
-			}
-			try{
-				IDD[1] = Integer.parseInt(IDASplit[1]);
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 114);
-			}
-			if (IDD[1] < 0){
-				return dExD.ErrorMessage(player, 114);
-			}
-			try{
-				amount = Integer.parseInt(IDASplit[2]);
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 108);
-			}
-			if (amount < 1){
-				return dExD.ErrorMessage(player, 108);
-			}
-		}
-		if(dExD.blacklisteditem(IDD[0])){
-			return dExD.ErrorMessage(player, 115);
-		}
-		try{
-			price = Double.parseDouble(sign.getText(2).replace(",", "."));
-		}catch(NumberFormatException nfe){
-			return dExD.ErrorMessage(player, 116);
-		}
-		if(price < 0.01){
-			return dExD.ErrorMessage(player, 116);
-		}
+		double price = Double.valueOf(sign.getText(2).replace(",", "."));
 		sign.setText(0, "§5[P-SHOP]");
 		sign.setText(1, sign.getText(1).toUpperCase());
 		sign.setText(2, priceForm(price));
@@ -983,100 +863,10 @@ public class dExActions {
 	}
 	
 	public boolean makePTrade(Player player, Sign sign){
-		int idsign = 0;
-		if((!player.canUseCommand("/dexppts"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
-			return dExD.ErrorMessage(player, 101);
+		if(Pfailchecks(player, sign, true)){
+			return true;
 		}
-		if(dExD.checklink(player)){
-			return dExD.ErrorMessage(player, 109);
-		}
-		if(sign.getText(1).equals("")){
-			return dExD.ErrorMessage(player, 103);
-		}
-		if(sign.getText(2).equals("")){
-			return dExD.ErrorMessage(player, 110);
-		}
-		String IDA = sign.getText(1);
-		String[] IDASplit = IDA.split(":");
-		String name = IDA;
-		int[] IDD = new int[]{0,0};
-		int amount = 0;
-		double price = 0;
-		if (IDASplit.length < 2){
-			return dExD.ErrorMessage(player, 111);
-		}
-		if(IDASplit.length == 2){
-			try{
-				IDD[0] = Integer.parseInt(IDASplit[0]);
-			}catch (NumberFormatException nfe){
-				idsign = -1;
-				IDD = dExD.getItemId(IDASplit[0].toUpperCase());
-				if(IDD[0] == -1){
-					return dExD.ErrorMessage(player, 112);
-				}
-			}
-			if (idsign != -1){
-				name = dExD.reverseItemLookUp(IDD[0],IDD[1]);
-				if (name == null){ return dExD.ErrorMessage(player, 112); }
-			}
-			else{
-				name = sign.getText(1);
-			}
-			try{
-				amount = Integer.parseInt(IDASplit[1]);
-			}catch (NumberFormatException nfe){
-				if(!IDASplit[1].equals("*")){
-					return dExD.ErrorMessage(player, 108);
-				}
-				else{
-					amount = 99999;
-				}
-			}
-			if (amount < 1){
-				return dExD.ErrorMessage(player, 108);
-			}
-		}else{
-			try{
-				IDD[0] = Integer.parseInt(IDASplit[0]);
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 113);
-			}
-			if (IDD[0] < 1){
-				return dExD.ErrorMessage(player, 113);
-			}
-			try{
-				IDD[1] = Integer.parseInt(IDASplit[1]);
-			}catch (NumberFormatException nfe){
-				return dExD.ErrorMessage(player, 114);
-			}
-			if (IDD[1] < 0){
-				return dExD.ErrorMessage(player, 114);
-			}
-			try{
-				amount = Integer.parseInt(IDASplit[2]);
-			}catch (NumberFormatException nfe){
-				if(!IDASplit[2].equals("*")){
-					return dExD.ErrorMessage(player, 108);
-				}
-				else{
-					amount = 99999;
-				}
-			}
-			if (amount < 1){
-				return dExD.ErrorMessage(player, 108);
-			}
-		}
-		if(dExD.blacklisteditem(IDD[0])){
-			return dExD.ErrorMessage(player, 115);
-		}
-		try{
-			price = Double.parseDouble(sign.getText(2).replace(",", "."));
-		}catch(NumberFormatException nfe){
-			return dExD.ErrorMessage(player, 116);
-		}
-		if(price < 0.01){
-			return dExD.ErrorMessage(player, 116);
-		}
+		double price = Double.valueOf(sign.getText(2).replace(",", "."));
 		sign.setText(0, "§9[P-TRADE]");
 		sign.setText(1, sign.getText(1).toUpperCase());
 		sign.setText(2, priceForm(price));
@@ -1094,15 +884,34 @@ public class dExActions {
 		return false;
 	}
 	
-	public boolean makeSShop(Player player, Sign sign){ //TODO Correct Amount?
+	public boolean makeSShop(Player player, Sign sign){
+		if(GSfailchecks(player, sign)){ 
+			return true;
+		}
+		double price = dExD.getItemBuyPrice(sign.getText(1).toUpperCase());
+		int amount = Integer.valueOf(sign.getText(2));
+		sign.setText(0, "§7[S-SHOP]");
+		sign.setText(1, sign.getText(1).toUpperCase());
+		sign.setText(3, priceForm(price*amount));
+		dExD.openlink(player, sign);
+		String mess = dExD.pmessage(203, "", "");
+		player.sendMessage(mess);
+		dExD.logAct(301, player.getName(),"", "S-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		return false;
+	}
+	
+	private boolean GSfailchecks(Player player, Sign sign){
 		int idsign = 0;
 		if((!player.canUseCommand("/dexpsss"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 101);
 		}
 		if (sign.getText(1).equals("")){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 103);
 		}
 		if(sign.getText(2).equals("")){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 104);
 		}
 		double price = 0;
@@ -1117,12 +926,16 @@ public class dExActions {
 			idsign = -1;
 			int[] ID = dExD.getItemId(sign.getText(1).toUpperCase());
 			if(ID[0] == -1){
+				NoPlaceSign(sign);
 				return dExD.ErrorMessage(player, 112);
 			}
 		}
 		if (idsign != -1){
 			name = dExD.reverseItemLookUp(Integer.valueOf(idsplit[0]), Integer.valueOf(idsplit[1]));
-			if (name == null){ return dExD.ErrorMessage(player, 112); }
+			if (name == null){ 
+				NoPlaceSign(sign); 
+				return dExD.ErrorMessage(player, 112);
+			}
 			price = dExD.getItemBuyPrice(name);
 		}
 		else{
@@ -1130,28 +943,147 @@ public class dExActions {
 			price = dExD.getItemBuyPrice(sign.getText(1).toUpperCase());
 		}
 		if(price == -1){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 105);
 		}
 		if(price == -2){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 106);
 		}
 		if(price == 0){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 107);
 		}
 		try{
 			amount = Integer.parseInt(sign.getText(2));
 		}catch (NumberFormatException nfe){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 108);
 		}
 		if (amount < 1){
+			NoPlaceSign(sign);
 			return dExD.ErrorMessage(player, 108);
 		}
-		sign.setText(0, "§7[S-SHOP]");
-		sign.setText(3, "SERVER");
-		dExD.openlink(player, sign);
-		String mess = dExD.pmessage(203, "", "");
-		player.sendMessage(mess);
-		//dExD.logAct(301, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		return false;
+	}
+	
+	private boolean Pfailchecks(Player player, Sign sign, boolean isPTrade){
+		int idsign = 0;
+		if(!dExD.canmakemore(player)){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 135);
+		}
+		if((!player.canUseCommand("/dexppts"))&&(!player.canUseCommand("/dexadmin"))&&(!player.canUseCommand("/dexall"))){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 101);
+		}
+		if(dExD.checklink(player)){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 109);
+		}
+		if(sign.getText(1).equals("")){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 103);
+		}
+		if(sign.getText(2).equals("")){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 110);
+		}
+		String IDA = sign.getText(1);
+		String[] IDASplit = IDA.split(":");
+		String name = IDA;
+		int[] IDD = new int[]{0,0};
+		int amount = 0;
+		double price = 0;
+		if (IDASplit.length < 2){
+			NoPlaceSign(sign);
+			return dExD.ErrorMessage(player, 111);
+		}
+		if(IDASplit.length == 2){
+			try{
+				IDD[0] = Integer.parseInt(IDASplit[0]);
+			}catch (NumberFormatException nfe){
+				idsign = -1;
+				IDD = dExD.getItemId(IDASplit[0].toUpperCase());
+				if(IDD[0] == -1){
+					NoPlaceSign(sign);
+					return dExD.ErrorMessage(player, 112);
+				}
+			}
+			if (idsign != -1){
+				name = dExD.reverseItemLookUp(IDD[0],IDD[1]);
+				if (name == null){ 
+					NoPlaceSign(sign); 
+					return dExD.ErrorMessage(player, 112);
+				}
+			}
+			else{
+				name = sign.getText(1);
+			}
+			try{
+				amount = Integer.parseInt(IDASplit[1]);
+			}catch (NumberFormatException nfe){
+				if(IDASplit[2].equals("*") && isPTrade){
+					amount = 99999;
+				}
+				else{
+					NoPlaceSign(sign);
+					return dExD.ErrorMessage(player, 108);
+				}
+			}
+			if (amount < 1){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 108);
+			}
+		}
+		else{
+			try{
+				IDD[0] = Integer.parseInt(IDASplit[0]);
+			}catch (NumberFormatException nfe){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 113);
+			}
+			if (IDD[0] < 1){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 113);
+			}
+			try{
+				IDD[1] = Integer.parseInt(IDASplit[1]);
+			}catch (NumberFormatException nfe){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 114);
+			}
+			if (IDD[1] < 0){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 114);
+			}
+			try{
+				amount = Integer.parseInt(IDASplit[2]);
+			}catch (NumberFormatException nfe){
+				if(IDASplit[2].equals("*") && isPTrade){
+					amount = 99999;
+				}
+				else{
+					NoPlaceSign(sign);
+					return dExD.ErrorMessage(player, 108);
+				}
+			}
+			if (amount < 1){
+				NoPlaceSign(sign);
+				return dExD.ErrorMessage(player, 108);
+			}
+		}
+		if(dExD.blacklisteditem(IDD[0])){
+			return dExD.ErrorMessage(player, 115);
+		}
+		try{
+			price = Double.parseDouble(sign.getText(2).replace(",", "."));
+		}catch(NumberFormatException nfe){
+			return dExD.ErrorMessage(player, 116);
+		}
+		if(price < 0.01){
+			return dExD.ErrorMessage(player, 116);
+		}
 		return false;
 	}
 	
@@ -1350,5 +1282,11 @@ public class dExActions {
 			}
 			return true;
 		}
+	}
+	
+	private void NoPlaceSign(Sign sign){
+		Location loc = new Location(sign.getWorld(), sign.getX(), sign.getY(), sign.getZ());
+		sign.getWorld().dropItem(loc, 323);
+		sign.getWorld().setBlockAt(0, sign.getX(), sign.getY(), sign.getZ());
 	}
 }

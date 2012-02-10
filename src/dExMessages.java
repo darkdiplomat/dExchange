@@ -38,6 +38,10 @@ public class dExMessages {
 	E132 = "You can not change a sign you do not own!",
 	E133 = "This sign cannot take anymore items!",
 	E134 = "That Item is already listed!",
+	E135 = "You have maxed your sign limit already!",
+	E136 = "You cannot attach a chest to one not owned!",
+	E137 = "This chest is protected and you do not own it!",
+	E138 = "This chest is part of a link you do not own!",
 
 	/*Regular Messages*/
 	M201 = "<lightblue>Global Shop Sign Created!",
@@ -96,39 +100,43 @@ public class dExMessages {
 	
 	private void LoadMessages(){
 		E101 = LoadStringCheck(Mess, E101, "101-PlaceNoPermission");
-		E102 = LoadStringCheck(Mess, E102,"102-UseNoPermission");
-		E103 = LoadStringCheck(Mess, E103,"103-ItemNotSpecified");
-		E104 = LoadStringCheck(Mess, E104,"104-AmountNotSpecified");
-		E105 = LoadStringCheck(Mess, E105,"105-PriceNotFound");
-		E106 = LoadStringCheck(Mess, E106,"106-PriceIssues");
-		E107 = LoadStringCheck(Mess, E107,"107-NotForSell");
-		E108 = LoadStringCheck(Mess, E108,"108-AmountInvalid");
-		E109 = LoadStringCheck(Mess, E109,"109-LinkInProgress");
-		E110 = LoadStringCheck(Mess, E110,"110-PriceNotSpecified");
-		E111 = LoadStringCheck(Mess, E111,"111-SignNotCorrect");
-		E112 = LoadStringCheck(Mess, E112,"112-ItemNotFound");
-		E113 = LoadStringCheck(Mess, E113,"113-InvalidItemID");
-		E114 = LoadStringCheck(Mess, E114,"114-InvalidItemDamage");
-		E115 = LoadStringCheck(Mess, E115,"115-ItemBanned");
-		E116 = LoadStringCheck(Mess, E116,"116-InvalidPrice");
-		E117 = LoadStringCheck(Mess, E117,"117-MissingChest");
-		E118 = LoadStringCheck(Mess, E118,"118-OpenChestDenied");
-		E119 = LoadStringCheck(Mess, E119,"119-BreakSignDenied");
-		E120 = LoadStringCheck(Mess, E120,"120-BreakChestDenied");
-		E121 = LoadStringCheck(Mess, E121,"121-InventoryPlayerFull");
-	    E122 = LoadStringCheck(Mess, E122,"122-NotEnoughMoney");
-	    E123 = LoadStringCheck(Mess, E123,"123-InventoryPlayerNone");
-	    E124 = LoadStringCheck(Mess, E124,"124-GlobalNoMoney");
-	    E125 = LoadStringCheck(Mess, E125,"125-InventoryChestFull");
-	    E126 = LoadStringCheck(Mess, E126,"126-InventoryChestNone");
-	    E127 = LoadStringCheck(Mess, E127,"127-PlayerOtherNoMoney");
-	    E128 = LoadStringCheck(Mess, E128,"128-PTRADEIncorrectItem");
-	    E129 = LoadStringCheck(Mess, E129,"129-SetPriceEngaged");
-	    E130 = LoadStringCheck(Mess, E130,"130-SetAmountEngage");
-	    E131 = LoadStringCheck(Mess, E131,"131-CannotSetPSHOPAmount");
-	    E132 = LoadStringCheck(Mess, E132,"132-CannotChangeSignNotOwned");
-	    E133 = LoadStringCheck(Mess, E133,"133-SignNotTakingItems");
-	    E134 = LoadStringCheck(Mess, E134,"134-ItemAlreadyListed");
+		E102 = LoadStringCheck(Mess, E102, "102-UseNoPermission");
+		E103 = LoadStringCheck(Mess, E103, "103-ItemNotSpecified");
+		E104 = LoadStringCheck(Mess, E104, "104-AmountNotSpecified");
+		E105 = LoadStringCheck(Mess, E105, "105-PriceNotFound");
+		E106 = LoadStringCheck(Mess, E106, "106-PriceIssues");
+		E107 = LoadStringCheck(Mess, E107, "107-NotForSell");
+		E108 = LoadStringCheck(Mess, E108, "108-AmountInvalid");
+		E109 = LoadStringCheck(Mess, E109, "109-LinkInProgress");
+		E110 = LoadStringCheck(Mess, E110, "110-PriceNotSpecified");
+		E111 = LoadStringCheck(Mess, E111, "111-SignNotCorrect");
+		E112 = LoadStringCheck(Mess, E112, "112-ItemNotFound");
+		E113 = LoadStringCheck(Mess, E113, "113-InvalidItemID");
+		E114 = LoadStringCheck(Mess, E114, "114-InvalidItemDamage");
+		E115 = LoadStringCheck(Mess, E115, "115-ItemBanned");
+		E116 = LoadStringCheck(Mess, E116, "116-InvalidPrice");
+		E117 = LoadStringCheck(Mess, E117, "117-MissingChest");
+		E118 = LoadStringCheck(Mess, E118, "118-OpenChestDenied");
+		E119 = LoadStringCheck(Mess, E119, "119-BreakSignDenied");
+		E120 = LoadStringCheck(Mess, E120, "120-BreakChestDenied");
+		E121 = LoadStringCheck(Mess, E121, "121-InventoryPlayerFull");
+	    E122 = LoadStringCheck(Mess, E122, "122-NotEnoughMoney");
+	    E123 = LoadStringCheck(Mess, E123, "123-InventoryPlayerNone");
+	    E124 = LoadStringCheck(Mess, E124, "124-GlobalNoMoney");
+	    E125 = LoadStringCheck(Mess, E125, "125-InventoryChestFull");
+	    E126 = LoadStringCheck(Mess, E126, "126-InventoryChestNone");
+	    E127 = LoadStringCheck(Mess, E127, "127-PlayerOtherNoMoney");
+	    E128 = LoadStringCheck(Mess, E128, "128-PTRADEIncorrectItem");
+	    E129 = LoadStringCheck(Mess, E129, "129-SetPriceEngaged");
+	    E130 = LoadStringCheck(Mess, E130, "130-SetAmountEngage");
+	    E131 = LoadStringCheck(Mess, E131, "131-CannotSetPSHOPAmount");
+	    E132 = LoadStringCheck(Mess, E132, "132-CannotChangeSignNotOwned");
+	    E133 = LoadStringCheck(Mess, E133, "133-SignNotTakingItems");
+	    E134 = LoadStringCheck(Mess, E134, "134-ItemAlreadyListed");
+	    E135 = LoadStringCheck(Mess, E135, "135-SignLimitReached");
+	    E136 = LoadStringCheck(Mess, E136, "136-CannotAttachChest");
+	    E137 = LoadStringCheck(Mess, E137, "137-ChestProtected");
+	    E138 = LoadStringCheck(Mess, E138, "138-ChestLinkNotOwned");
 		
 		M201 = LoadStringCheck(Mess, M201,"201-GSHOPCreate");
 		M202 = LoadStringCheck(Mess, M202,"202-GTRADECreate");
@@ -254,6 +262,10 @@ public class dExMessages {
 		case 132: player.notify(E132); return true;
 		case 133: player.notify(E133); return true;
 		case 134: player.notify(E134); return true;
+		case 135: player.notify(E135); return true;
+		case 136: player.notify(E136); return true;
+		case 137: player.notify(E137); return true;
+		case 138: player.notify(E138); return true;
 		default: return true;
 		}
 	}

@@ -34,6 +34,9 @@
 132-CannotChangeSignNotOwned=You can not change a sign you do not own!
 133-SignNotTakingItems=This sign cannot take anymore items!
 134-ItemAlreadyListed=That Item is already listed!
+135-SignLimitReached=You have maxed your sign limit already!
+136-CannotAttachChest=You cannot attach a chest to one you do not own!
+137-
 #Normal Messages#
 201-GSHOPCreate=<lightblue>Global Shop Sign Created!
 202-GTRADECreate=<lightblue>Global Trade Sign Created!
