@@ -38,6 +38,8 @@
 136-CannotAttachChest=You cannot attach a chest to one you do not own!
 137-ChestProtected=This chest is protected and you do not own it!
 138-ChestLinkNotOwned=This chest is part of a link you do not own!
+139-STSNotAllSold=Not all items were sold and were returned to you.
+140-STSInUse=This chest is already in use!
 #Normal Messages#
 201-GSHOPCreate=<lightblue>Global Shop Sign Created!
 202-GTRADECreate=<lightblue>Global Trade Sign Created!
@@ -65,6 +67,8 @@
 224-ItemRemovedFromList=<rose> Item Removed!
 225-ItemBuyPriceUpdate=<lightblue> Item Buy Price Updated!
 226-ItemSellPriceUpdate=<lightblue> Item Sell Price Updated!
+227-STSItemsSold=<lightblue> Your items sold for a total of <lightgreen><A> <M>
+228-STSPlaceChest=<lightblue> Place a chest to make a S-TRADE Chest
 #Logging Messages#
 301-SignCreate=<P1> created <T> at X:<SX> Y:<SY> Z:<SZ> W:<SW>
 302-SignLinked=<P1> completed link with chest at X:<CX> Y:<CY> Z: <CZ> W:<CW>
@@ -85,3 +89,4 @@
 317-BPriceUpdate=<P1> updated Buy Price for Name:<T> to <PR>
 318-SPriceUpdate=<P1> updated Sell Price for Name:<T> to <PR>
 319-SSUsed=<P1> used S-SHOP sign at X:<SX> Y:<SY> Z:<SZ> W:<SW> to purchase <A> of <I>
+320-STUsed=<P1> used S-TRADE chest at X:<CX> Y:<CY> Z:<CZ> W:<CW> to sell <I>

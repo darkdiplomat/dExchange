@@ -45,6 +45,8 @@ public class dExchange extends Plugin {
 		etc.getLoader().addListener( PluginLoader.Hook.BLOCK_BROKEN, dExL, this, PluginListener.Priority.LOW);
 		etc.getLoader().addListener( PluginLoader.Hook.BLOCK_DESTROYED, dExL, this, PluginListener.Priority.LOW);
 		etc.getLoader().addListener( PluginLoader.Hook.SIGN_CHANGE, dExL, this, PluginListener.Priority.LOW);
+		etc.getLoader().addListener( PluginLoader.Hook.CLOSE_INVENTORY, dExL, this, PluginListener.Priority.LOW);
+		etc.getLoader().addListener( PluginLoader.Hook.OPEN_INVENTORY, dExL, this, PluginListener.Priority.LOW);
 	}
 	
 	public synchronized void disable() {

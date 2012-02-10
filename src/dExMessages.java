@@ -42,6 +42,8 @@ public class dExMessages {
 	E136 = "You cannot attach a chest to one not owned!",
 	E137 = "This chest is protected and you do not own it!",
 	E138 = "This chest is part of a link you do not own!",
+	E139 = "Not all items were sold and have been returned to you.",
+	E140 = "This chest is already in use!",
 
 	/*Regular Messages*/
 	M201 = "<lightblue>Global Shop Sign Created!",
@@ -70,6 +72,8 @@ public class dExMessages {
 	M224 = "<rose> Item Removed!",
 	M225 = "<lightblue> Item Buy Price Updated!",
 	M226 = "<lightblue> Item Sell Price Updated!",
+	M227 = "<lightblue> Your items sold for a total of <lightgreen><A> <M>",
+	M228 = "<lightblue> Place a chest to make a S-TRADE Chest",
 
 	/*Logging Messages*/
 	L301 = "<P1> created <T> at X:<SX> Y:<SY> Z:<SZ> W:<SW>",
@@ -90,7 +94,8 @@ public class dExMessages {
 	L316 = "<P1> removed Name:<T> from Global Lists",
 	L317 = "<P1> updated Buy Price for Name:<T> to <PR>",
 	L318 = "<P1> updated Sell Price for Name:<T> to <PR>",
-	L319 = "<P1> used S-SHOP sign at X:<SX> Y:<SY> Z:<SZ> W:<SW> to purchase <A> of <I>";
+	L319 = "<P1> used S-SHOP sign at X:<SX> Y:<SY> Z:<SZ> W:<SW> to purchase <A> of <I>",
+	L320 = "<P1> used S-TRADE chest at X:<CX> Y:<CY> Z:<CZ> W:<CW> to sell <I>";
 		
 	public dExMessages(dExData dExD, PropertiesFile Mess){
 		this.dExD = dExD;
@@ -137,6 +142,8 @@ public class dExMessages {
 	    E136 = LoadStringCheck(Mess, E136, "136-CannotAttachChest");
 	    E137 = LoadStringCheck(Mess, E137, "137-ChestProtected");
 	    E138 = LoadStringCheck(Mess, E138, "138-ChestLinkNotOwned");
+	    E139 = LoadStringCheck(Mess, E139, "139-STSNotAllSold");
+	    E140 = LoadStringCheck(Mess, E140, "140-STSInUse");
 		
 		M201 = LoadStringCheck(Mess, M201,"201-GSHOPCreate");
 		M202 = LoadStringCheck(Mess, M202,"202-GTRADECreate");
@@ -164,6 +171,8 @@ public class dExMessages {
 	    M224 = LoadStringCheck(Mess, M224,"224-ItemRemovedFromList");
 	    M225 = LoadStringCheck(Mess, M225,"225-ItemBuyPriceUpdate");
 	    M226 = LoadStringCheck(Mess, M226,"226-ItemSellPriceUpdate");
+	    M227 = LoadStringCheck(Mess, M227,"227-STSItemsSold");
+	    M228 = LoadStringCheck(Mess, M228,"228-STSPlaceChest");
 		
 		L301 = LoadStringCheck(Mess, L301,"301-SignCreate");
 		L302 = LoadStringCheck(Mess, L302,"302-SignLinked");
@@ -184,6 +193,7 @@ public class dExMessages {
 	    L317 = LoadStringCheck(Mess, L317,"317-BPriceUpdate");
 	    L318 = LoadStringCheck(Mess, L318,"318-SPriceUpdate");
 	    L319 = LoadStringCheck(Mess, L319,"319-SSUsed");
+	    L320 = LoadStringCheck(Mess, L320,"320-STUsed");
 	    
 	}
 
@@ -220,7 +230,8 @@ public class dExMessages {
 			case 316: m = "[dEx]" + L316.replace("<P1>", P1).replace("<T>", T); break;
 			case 317: m = "[dEx]" + L317.replace("<P1>", P1).replace("<T>", T).replace("<PR>", PR); break;
 			case 318: m = "[dEx]" + L318.replace("<P1>", P1).replace("<T>", T).replace("<PR>", PR); break;
-			case 319: m = "[dEx]" + L309.replace("<P1>", P1).replace("<SX>", SX).replace("<SY>", SY).replace("<SZ>", SZ).replace("<SW>", SW).replace("<A>", A).replace("<I>", I); break;
+			case 319: m = "[dEx]" + L319.replace("<P1>", P1).replace("<SX>", SX).replace("<SY>", SY).replace("<SZ>", SZ).replace("<SW>", SW).replace("<A>", A).replace("<I>", I); break;
+			case 320: m = "[dEx]" + L320.replace("<P1>", P1).replace("<CX>", CX).replace("<CY>", CY).replace("<CZ>", CZ).replace("<CW>", CW).replace("<I>", I); break;
 			}
 			etc.getLoader().callCustomHook("dCBalance", new Object[]{"log", m});
 		}
@@ -266,6 +277,8 @@ public class dExMessages {
 		case 136: player.notify(E136); return true;
 		case 137: player.notify(E137); return true;
 		case 138: player.notify(E138); return true;
+		case 139: player.notify(E139); return true;
+		case 140: player.notify(E140); return true;
 		default: return true;
 		}
 	}
@@ -296,6 +309,8 @@ public class dExMessages {
 		case 224: M = Colorize(M224); M = "§2[§6dEx§2]" + M.replace("<A>", A).replace("<I>", I).replace("<M>", dExD.getMN()); return M;
 		case 225: M = Colorize(M225); M = "§2[§6dEx§2]" + M.replace("<A>", A).replace("<I>", I).replace("<M>", dExD.getMN()); return M;
 		case 226: M = Colorize(M226); M = "§2[§6dEx§2]" + M.replace("<A>", A).replace("<I>", I).replace("<M>", dExD.getMN()); return M;
+		case 227: M = Colorize(M227); M = "§2[§6dEx§2]" + M.replace("<A>", A).replace("<I>", I).replace("<M>", dExD.getMN()); return M;
+		case 228: M = Colorize(M228); M = "§2[§6dEx§2]" + M.replace("<A>", A).replace("<I>", I).replace("<M>", dExD.getMN()); return M;
 		default: String Missing = "MISSING MESSAGE M:"+code; return Missing;
 		}
 	}

@@ -27,6 +27,8 @@ public class dExActions {
 	dExData dExD;
 	HashMap<Player, String> SAC = new HashMap<Player, String>();
 	HashMap<Player, Double> SPC = new HashMap<Player, Double>();
+	ArrayList<Player> STS = new ArrayList<Player>();
+	ArrayList<Inventory> STSinUse = new ArrayList<Inventory>();
 	
 	public dExActions(dExchange dEx){
 		this.dEx = dEx;
@@ -1288,5 +1290,139 @@ public class dExActions {
 		Location loc = new Location(sign.getWorld(), sign.getX(), sign.getY(), sign.getZ());
 		sign.getWorld().dropItem(loc, 323);
 		sign.getWorld().setBlockAt(0, sign.getX(), sign.getY(), sign.getZ());
+	}
+	
+	public boolean STSPlayer(Player player){
+		return STS.contains(player);
+	}
+	
+	public boolean STSIsInUse(Inventory inv){
+		return STSinUse.contains(inv);
+	}
+	
+	public void addSTSInv(Inventory inv){
+		if(!STSinUse.contains(inv)){
+			STSinUse.add(inv);
+		}
+	}
+	
+	public boolean onStartSTrade(Player player){
+		if(!player.canUseCommand("/dexpsts")){
+			return dExD.ErrorMessage(player, 102);
+		}
+		if(!STS.contains(player)){
+			STS.add(player);
+		}
+		String mess = dExD.pmessage(228, "", "");
+		player.sendMessage(mess);
+		return true;
+	}
+	
+	public boolean onSTradePlace(Player player, Block chest){
+		float pos = player.getRotation();
+		Block block = new Block();
+		block.setType(63);
+		block.setX(chest.getX());
+		block.setY(chest.getY()+1);
+		block.setZ(chest.getZ());
+		Sign sign = null;
+		if((pos >= 0 && pos < 45) || (pos >= 315 && pos < 361)){
+			block.setData(0 | 0x8);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		else if(pos >= 45 && pos < 115){
+			block.setData(0 | 0xC);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		else if(pos >= 115 && pos < 225){
+			block.setData(0 | 0x0);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		else if(pos >= 225 && pos < 315){
+			block.setData(0 | 0x4);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		sign.setText(0, "§6[S-TRADE]");
+		sign.setText(1, "§2Ready To");
+		sign.setText(2, "§2Accept");
+		sign.setText(3, "~~~~~~~~");
+		sign.update();
+		STS.remove(player);
+		dExD.logAct(301, player.getName(),"", "S-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		return false;
+	}
+	
+	public void onSTradeActivate(Player player, Inventory inv){
+		Inventory invp = player.getInventory();
+		Chest chest = (Chest)inv;
+		Block block = player.getWorld().getBlockAt(chest.getX(), chest.getY()+1, chest.getZ());
+		if(block.getType() == 63){
+			Sign sign = (Sign)player.getWorld().getComplexBlock(block);
+			if(sign.getText(0).equals("§6[S-TRADE]")){
+				double payout = 0;
+				boolean notempty = false, notallsold = false;
+				StringBuilder items = new StringBuilder();
+				for(Item item : inv.getContents()){
+					if(item != null){
+						notempty = true;
+						int id = item.getItemId(), amount = item.getAmount(), damage = item.getDamage();
+						String name = dExD.reverseItemLookUp(id, damage);
+						if (name == null){
+							notallsold = true;
+							addItem(invp, id, damage, amount, 36);
+							inv.removeItem(item);
+							continue;
+						}
+						double price = dExD.getItemSellPrice(name);
+						if(price == -1){
+							notallsold = true;
+							addItem(invp, id, damage, amount, 36);
+							inv.removeItem(item);
+							continue;
+						}
+						else if(price == -2){
+							notallsold = true;
+							addItem(invp, id, damage, amount, 36);
+							inv.removeItem(item);
+							continue;
+						}
+						else if(price == 0){
+							notallsold = true;
+							addItem(invp, id, damage, amount, 36);
+							inv.removeItem(item);
+							continue;
+						}
+						price *= amount;
+						payout += price;
+						inv.removeItem(item);
+						items.append(name+"("+amount+") ");
+					}
+				}
+				if(notempty){
+					payPlayer(player.getName(), payout);
+					String mess = dExD.pmessage(227, priceForm(payout), "");
+					player.sendMessage(mess);
+					if(notallsold){
+						dExD.ErrorMessage(player, 139);
+					}
+					dExD.logAct(318, player.getName(), "", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), items.toString(), "", "");
+				}
+			}
+			STSinUse.remove(inv);
+		}
+	}
+	
+	public boolean onSTradeDestroy(Player player, Block chest){ //TODO Messages
+		if(!player.canUseCommand("/dexpsts") || !player.canUseCommand("/dexadmin")){
+			return true;
+		}
+		Block block = player.getWorld().getBlockAt(chest.getX(), chest.getY()+1, chest.getZ());
+		block.setType(0);
+		block.update();
+		return false;
 	}
 }

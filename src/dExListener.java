@@ -158,6 +158,9 @@ public class dExListener extends PluginListener {
 						}
 					}
 				}
+				else if(cmd[1].equalsIgnoreCase("sts")){
+					return dExA.onStartSTrade(player);
+				}
 				else{
 					return dExA.priceCheck(player, cmd[1]);
 				}
@@ -210,6 +213,9 @@ public class dExListener extends PluginListener {
 				if(isChestOwner(player, blockPlaced)){
 					return dExD.ErrorMessage(player, 136);
 				}
+			}
+			else if(dExA.STSPlayer(player)){
+				return dExA.onSTradePlace(player, blockPlaced);
 			}
 		}
 		return false;
@@ -380,6 +386,14 @@ public class dExListener extends PluginListener {
 					return dExD.ErrorMessage(player, 119);
 				}
 			}
+			else if (sign.getText(0).equals("§6[S-TRADE]")){
+				sign.setText(0, sign.getText(0));
+				sign.setText(1, sign.getText(1));
+				sign.setText(2, sign.getText(2));
+				sign.setText(3, sign.getText(3));
+				sign.update();
+				return true;
+			}
 		}
 		else if(block.getType() == 54){
 			Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block);
@@ -399,22 +413,59 @@ public class dExListener extends PluginListener {
 					return dExD.ErrorMessage(player, 120);
 				}
 			}
+			else if(sign != null){
+				if(!scansign(player, sign)){
+					dExD.removeline(sign, chest, true);
+					String mess = dExD.pmessage(211, "", "");
+					player.sendMessage(mess);
+					dExD.logAct(303, player.getName(), "", "CHEST", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getY()), String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
+					return false;
+				}
+				else{
+					return dExD.ErrorMessage(player, 120);
+				}
+			}
 			else{
-				if(sign != null){
-					if(!scansign(player, sign)){
-						dExD.removeline(sign, chest, true);
-						String mess = dExD.pmessage(211, "", "");
-						player.sendMessage(mess);
-						dExD.logAct(303, player.getName(), "", "CHEST", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getY()), String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), "", "", "");
-						return false;
-					}
-					else{
-						return dExD.ErrorMessage(player, 120);
+				Block signblock = player.getWorld().getBlockAt(block.getX(), block.getY()+1, block.getZ());
+				if(signblock.getType() == 63){
+					sign = (Sign)player.getWorld().getComplexBlock(signblock);
+					if(sign.getText(0).equalsIgnoreCase("§6[S-TRADE]")){
+						return dExA.onSTradeDestroy(player, block);
 					}
 				}
 			}
 		}
 		return false;
+	}
+	
+	public boolean onOpenInventory(HookParametersOpenInventory openInventory){
+		Inventory inv = openInventory.getInventory();
+		Player player = openInventory.getPlayer();
+		if(inv instanceof Chest){
+			Chest chest = (Chest)inv;
+			Block block = player.getWorld().getBlockAt(chest.getX(), chest.getY()+1, chest.getZ());
+			if(block.getType() == 63){
+				Sign sign = (Sign)player.getWorld().getComplexBlock(block);
+				if(sign.getText(0).equals("§6[S-TRADE]")){
+					if(!player.canUseCommand("/dexusts") || !player.canUseCommand("/dexall") || !player.canUseCommand("/dexadmin")){
+						return dExD.ErrorMessage(player, 102);
+					}
+					if(dExA.STSIsInUse(inv)){
+						return dExD.ErrorMessage(player, 140);
+					}
+					dExA.addSTSInv(inv);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void onCloseInventory(HookParametersCloseInventory closeInventory){
+		Player player = closeInventory.getPlayer();
+		Inventory inv = closeInventory.getInventory();
+		if(inv instanceof Chest){
+			dExA.onSTradeActivate(player, inv);
+		}
 	}
 	
 	private boolean isChestOwner(Player player, Block block){
