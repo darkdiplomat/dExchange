@@ -1319,40 +1319,46 @@ public class dExActions {
 	}
 	
 	public boolean onSTradePlace(Player player, Block chest){
-		float pos = player.getRotation();
+		float rot = player.getRotation();
+		if(rot < 0){ rot *= -1; } //Fix negative rotation
 		Block block = new Block();
 		block.setType(63);
 		block.setX(chest.getX());
 		block.setY(chest.getY()+1);
 		block.setZ(chest.getZ());
 		Sign sign = null;
-		if((pos >= 0 && pos < 45) || (pos >= 315 && pos < 361)){
+		if((rot >= 0 && rot < 45) || (rot >= 315 && rot < 361)){
 			block.setData(0 | 0x8);
 			player.getWorld().setBlock(block);
 			sign = (Sign)player.getWorld().getComplexBlock(block);
 		}
-		else if(pos >= 45 && pos < 115){
-			block.setData(0 | 0xC);
-			player.getWorld().setBlock(block);
-			sign = (Sign)player.getWorld().getComplexBlock(block);
-		}
-		else if(pos >= 115 && pos < 225){
-			block.setData(0 | 0x0);
-			player.getWorld().setBlock(block);
-			sign = (Sign)player.getWorld().getComplexBlock(block);
-		}
-		else if(pos >= 225 && pos < 315){
+		else if(rot >= 45 && rot < 115){
 			block.setData(0 | 0x4);
 			player.getWorld().setBlock(block);
 			sign = (Sign)player.getWorld().getComplexBlock(block);
 		}
-		sign.setText(0, "§6[S-TRADE]");
-		sign.setText(1, "§2Ready To");
-		sign.setText(2, "§2Accept");
-		sign.setText(3, "~~~~~~~~");
-		sign.update();
-		STS.remove(player);
-		dExD.logAct(301, player.getName(),"", "S-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		else if(rot >= 115 && rot < 225){
+			block.setData(0 | 0x0);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		else if(rot >= 225 && rot < 315){
+			block.setData(0 | 0xC);
+			player.getWorld().setBlock(block);
+			sign = (Sign)player.getWorld().getComplexBlock(block);
+		}
+		if(sign != null){
+			sign.setText(0, "§6[S-TRADE]");
+			sign.setText(1, "§2Ready To");
+			sign.setText(2, "§2Accept");
+			sign.setText(3, "~~~~~~~~");
+			sign.update();
+			STS.remove(player);
+			dExD.logAct(301, player.getName(),"", "S-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		}
+		else{
+			player.notify("An error occurred");
+		}
 		return false;
 	}
 	
@@ -1416,9 +1422,9 @@ public class dExActions {
 		}
 	}
 	
-	public boolean onSTradeDestroy(Player player, Block chest){ //TODO Messages
+	public boolean onSTradeDestroy(Player player, Block chest){
 		if(!player.canUseCommand("/dexpsts") || !player.canUseCommand("/dexadmin")){
-			return true;
+			return dExD.ErrorMessage(player, 120);
 		}
 		Block block = player.getWorld().getBlockAt(chest.getX(), chest.getY()+1, chest.getZ());
 		block.setType(0);

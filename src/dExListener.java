@@ -214,6 +214,9 @@ public class dExListener extends PluginListener {
 					return dExD.ErrorMessage(player, 136);
 				}
 			}
+			else if(scanSTSChest(player, blockPlaced)){
+				return dExD.ErrorMessage(player, 141);
+			}
 			else if(dExA.STSPlayer(player)){
 				return dExA.onSTradePlace(player, blockPlaced);
 			}
@@ -387,12 +390,15 @@ public class dExListener extends PluginListener {
 				}
 			}
 			else if (sign.getText(0).equals("§6[S-TRADE]")){
-				sign.setText(0, sign.getText(0));
-				sign.setText(1, sign.getText(1));
-				sign.setText(2, sign.getText(2));
-				sign.setText(3, sign.getText(3));
-				sign.update();
-				return true;
+				Block chb = player.getWorld().getBlockAt(block.getX(), block.getY()-1, block.getZ());
+				if(chb.getType() == 54){
+					sign.setText(0, sign.getText(0));
+					sign.setText(1, sign.getText(1));
+					sign.setText(2, sign.getText(2));
+					sign.setText(3, sign.getText(3));
+					sign.update();
+					return true;
+				}
 			}
 		}
 		else if(block.getType() == 54){
@@ -522,17 +528,16 @@ public class dExListener extends PluginListener {
 	}
 	
 	private boolean scanchest(Player player, Block block){
-		Block block2 = null;
 		int bx = block.getX(), bz = block.getZ();
-		for(int x = (bx-2); x < (bx+2); x++){
-			for(int z = (bz-2); z < (bz+2); z++){
-				block2 = (Block)player.getWorld().getBlockAt(x, block.getY(), z);
-				if( block2.getType() == 54){
-					if(!(bz == z && bx == x)){
-						break;
-					}
-				}
-			}
+		Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
 		}
 		if(block2.getType() == 54){
 			Chest chest = (Chest)player.getWorld().getOnlyComplexBlock(block2);
@@ -541,6 +546,28 @@ public class dExListener extends PluginListener {
 				return scansign(player, sign);
 			}
 		}
+		return false;
+	}
+	
+	private boolean scanSTSChest(Player player, Block block){
+		int bx = block.getX(), bz = block.getZ();
+		Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
+		}
+		if(block2.getType() == 54){
+			Sign sign = (Sign)player.getWorld().getComplexBlock(block2.getX(), block2.getY()+1, block2.getZ());
+			if (sign != null){
+				return (sign.getText(0).equals("§6[S-TRADE]"));
+			}
+		}
+			
 		return false;
 	}
 	
@@ -565,17 +592,16 @@ public class dExListener extends PluginListener {
 	}
 	
 	private Sign getscansign(Player player, Block block){
-		Block block2 = null;
 		int bx = block.getX(), bz = block.getZ();
-		for(int x = (bx-2); x < (bx+2); x++){
-			for(int z = (bz-2); z < (bz+2); z++){
-				block2 = (Block)player.getWorld().getBlockAt(x, block.getY(), z);
-				if( block2.getType() == 54){
-					if(!(bz == z && bx == x)){
-						break;
-					}
-				}
-			}
+		Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
+		}
+		if(!(block2.getType() == 54)){
+			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
 		}
 		if(block2.getType() == 54){
 			Chest chest2 = (Chest)player.getWorld().getOnlyComplexBlock(block2);

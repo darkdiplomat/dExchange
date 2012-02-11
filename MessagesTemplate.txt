@@ -40,6 +40,7 @@
 138-ChestLinkNotOwned=This chest is part of a link you do not own!
 139-STSNotAllSold=Not all items were sold and were returned to you.
 140-STSInUse=This chest is already in use!
+141-STSDouble=S-Trade Chests cannot be Double Chests!
 #Normal Messages#
 201-GSHOPCreate=<lightblue>Global Shop Sign Created!
 202-GTRADECreate=<lightblue>Global Trade Sign Created!

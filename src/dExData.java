@@ -371,15 +371,19 @@ public class dExData {
 						int cx = rs.getInt("CX");
 						int cy = rs.getInt("CY");
 						int cz = rs.getInt("CZ");
-						if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
-							etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
-						}
+						try{
+							if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
+								etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
+							}
+						}catch (NullPointerException NPE){ } //DERP
 						Block block = etc.getServer().getWorld(sw).getBlockAt(sx, sy, sz);
 						if ((block.getType() == 63) || (block.getType() == 68)){
 							sign = (Sign)etc.getServer().getWorld(sw).getComplexBlock(block);
-							if(!etc.getServer().getWorld(cw).getChunk(cx, cy, cz).isLoaded()){
-								etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
-							}
+							try{
+								if(!etc.getServer().getWorld(cw).getChunk(cx, cy, cz).isLoaded()){
+									etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
+								}
+							}catch(NullPointerException NPE){ } //DERP
 							block = etc.getServer().getWorld(cw).getBlockAt(cx, cy, cz);
 							if(block.getType() == 54){
 								chest = (Chest) etc.getServer().getWorld(cw).getOnlyComplexBlock(block);
@@ -442,13 +446,19 @@ public class dExData {
 						int cx = Integer.valueOf(ChestLoc[1]);
 						int cy = Integer.valueOf(ChestLoc[2]);
 						int cz = Integer.valueOf(ChestLoc[3]);
-						if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
-							etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
-						}
+						try{
+							if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
+								etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
+							}
+						}catch(NullPointerException NPE){ }//oh well...
 						Block block = etc.getServer().getWorld(sw).getBlockAt(sx, sy, sz);
 						if ((block.getType() == 63) || (block.getType() == 68)){
 		    				sign = (Sign)etc.getServer().getWorld(sw).getComplexBlock(block);
-		    				etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
+		    				try{
+								if(!etc.getServer().getWorld(cw).getChunk(cx, cy, cz).isLoaded()){
+									etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
+								}
+							}catch(NullPointerException NPE){ } //DERP
 		    				block = etc.getServer().getWorld(cw).getBlockAt(cx, cy, cz);
 		    				if(block.getType() == 54){
 		    					chest = (Chest) etc.getServer().getWorld(cw).getOnlyComplexBlock(block);
@@ -539,7 +549,7 @@ public class dExData {
 		double price = -1;
 		if (SellPrice.containsKey(ItemName)){
 			price = SellPrice.get(ItemName);
-			if(price < 0.009){
+			if(price < 0.01){
 				price = -2;
 			}
 		}
@@ -558,7 +568,7 @@ public class dExData {
 		double price = -1;
 		if(BuyPrice.containsKey(ItemName)){
 			price = BuyPrice.get(ItemName);
-			if(price < 0.009){
+			if(price < 0.01){
 				price = -2;
 			}
 		}

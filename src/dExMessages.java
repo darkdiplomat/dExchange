@@ -44,6 +44,7 @@ public class dExMessages {
 	E138 = "This chest is part of a link you do not own!",
 	E139 = "Not all items were sold and have been returned to you.",
 	E140 = "This chest is already in use!",
+	E141 = "S-Trade chests cannot be Double Chests!",
 
 	/*Regular Messages*/
 	M201 = "<lightblue>Global Shop Sign Created!",
@@ -144,6 +145,7 @@ public class dExMessages {
 	    E138 = LoadStringCheck(Mess, E138, "138-ChestLinkNotOwned");
 	    E139 = LoadStringCheck(Mess, E139, "139-STSNotAllSold");
 	    E140 = LoadStringCheck(Mess, E140, "140-STSInUse");
+	    E141 = LoadStringCheck(Mess, E141, "141-STSDouble");
 		
 		M201 = LoadStringCheck(Mess, M201,"201-GSHOPCreate");
 		M202 = LoadStringCheck(Mess, M202,"202-GTRADECreate");
@@ -279,6 +281,7 @@ public class dExMessages {
 		case 138: player.notify(E138); return true;
 		case 139: player.notify(E139); return true;
 		case 140: player.notify(E140); return true;
+		case 141: player.notify(E141); return true;
 		default: return true;
 		}
 	}
