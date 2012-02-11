@@ -453,7 +453,7 @@ public class dExListener extends PluginListener {
 			if(block.getType() == 63){
 				Sign sign = (Sign)player.getWorld().getComplexBlock(block);
 				if(sign.getText(0).equals("§6[S-TRADE]")){
-					if(!player.canUseCommand("/dexusts") || !player.canUseCommand("/dexall") || !player.canUseCommand("/dexadmin")){
+					if(!player.canUseCommand("/dexusts") && !player.canUseCommand("/dexall") && !player.canUseCommand("/dexadmin")){
 						return dExD.ErrorMessage(player, 102);
 					}
 					if(dExA.STSIsInUse(inv)){
