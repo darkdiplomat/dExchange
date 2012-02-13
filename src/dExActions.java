@@ -219,7 +219,7 @@ public class dExActions {
 		String L2 = dExD.pmessage(206, priceForm(price), "");
 		player.sendMessage(L1);
 		player.sendMessage(L2);
-		dExD.logAct(308, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", name, String.valueOf(amount), "");
+		dExD.logAct(308, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", name, String.valueOf(amount), "");
 		return true;
 	}
 	
@@ -281,7 +281,7 @@ public class dExActions {
 		String L2 = dExD.pmessage(206, priceForm(price), "");
 		player.sendMessage(L1);
 		player.sendMessage(L2);
-		dExD.logAct(309, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(a), "");
+		dExD.logAct(309, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", Item, String.valueOf(a), "");
 		return true; 
 	}
 	
@@ -338,7 +338,7 @@ public class dExActions {
 				invam = hasItemAmount(invC, IDD[0], IDD[1], invC.getContentsSize());
 			}
 			String Item = dExD.reverseItemLookUp(IDD[0], IDD[1]);
-			String L1 = dExD.SpecM(212, String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getBlock().getWorld().getType().getId()));
+			String L1 = dExD.SpecM(212, String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getBlock().getWorld().getType().name()));
 			String L2 = dExD.pmessage(214, String.valueOf(invam), Item);
 			player.sendMessage(L1);
 			player.sendMessage(L2);
@@ -396,7 +396,7 @@ public class dExActions {
 			String L2 = dExD.pmessage(206, priceForm(price), "");
 			player.sendMessage(L1);
 			player.sendMessage(L2);
-			dExD.logAct(311, player.getName(), pname, "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(Amount), "");
+			dExD.logAct(311, player.getName(), pname, "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", Item, String.valueOf(Amount), "");
 		}
 		return true;
 	}
@@ -438,7 +438,7 @@ public class dExActions {
 				}
 			}
 			int room = hasRoomChest(invC, IDD[0], IDD[1], Amount, invC.getContentsSize());
-			String L1 = dExD.SpecM(212, String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getBlock().getWorld().getType().getId()));
+			String L1 = dExD.SpecM(212, String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getBlock().getWorld().getType().name()));
 			String L2 = dExD.pmessage(213, String.valueOf(room), "");
 			player.sendMessage(L1);
 			player.sendMessage(L2);
@@ -523,7 +523,7 @@ public class dExActions {
 				sign.setText(1, SignText+":"+(Amount-room));
 				sign.update();
 			}
-			dExD.logAct(312, player.getName(), pname, "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(room), "");
+			dExD.logAct(312, player.getName(), pname, "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", Item, String.valueOf(room), "");
 		}
 		return true;
 	}
@@ -607,7 +607,7 @@ public class dExActions {
 		String L2 = dExD.pmessage(206, priceForm(price), "");
 		player.sendMessage(L1);
 		player.sendMessage(L2);
-		dExD.logAct(319, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", Item, String.valueOf(a), "");
+		dExD.logAct(319, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", Item, String.valueOf(a), "");
 		return true; 
 	}
 	
@@ -822,7 +822,7 @@ public class dExActions {
 		sign.setText(3, priceForm(price*amount));
 		String mess = dExD.pmessage(201, "", "");
 		player.sendMessage(mess);
-		dExD.logAct(301, player.getName(), "", "G-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		dExD.logAct(301, player.getName(), "", "G-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 		return false;
 	}
 	
@@ -837,7 +837,7 @@ public class dExActions {
 			sign.setText(3, "");
 			String mess = dExD.pmessage(202, "", "");
 			player.sendMessage(mess);
-			dExD.logAct(301, player.getName(),"", "G-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+			dExD.logAct(301, player.getName(),"", "G-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 			return false;
 		}
 	}
@@ -859,7 +859,7 @@ public class dExActions {
 		dExD.openlink(player, sign);
 		String mess = dExD.pmessage(203, "", "");
 		player.sendMessage(mess);
-		dExD.logAct(301, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		dExD.logAct(301, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 		dExD.addPlayerSignTotal(player.getName());
 		return false;
 	}
@@ -881,7 +881,7 @@ public class dExActions {
 		dExD.openlink(player, sign);
 		String mess = dExD.pmessage(203, "", "");
 		player.sendMessage(mess);
-		dExD.logAct(301, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		dExD.logAct(301, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 		dExD.addPlayerSignTotal(player.getName());
 		return false;
 	}
@@ -898,7 +898,7 @@ public class dExActions {
 		dExD.openlink(player, sign);
 		String mess = dExD.pmessage(203, "", "");
 		player.sendMessage(mess);
-		dExD.logAct(301, player.getName(),"", "S-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+		dExD.logAct(301, player.getName(),"", "S-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 		return false;
 	}
 	
@@ -1133,10 +1133,10 @@ public class dExActions {
 			String mess = dExD.pmessage(218, "", "");
 			player.sendMessage(mess);
 			if(sign.getText(0).equals("§9[P-TRADE]")){
-				dExD.logAct(313, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", priceForm(SPC.get(player)), oldPrice);
+				dExD.logAct(313, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", priceForm(SPC.get(player)), oldPrice);
 			}
 			else{
-				dExD.logAct(313, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", priceForm(SPC.get(player)), oldPrice);
+				dExD.logAct(313, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", priceForm(SPC.get(player)), oldPrice);
 			}
 			SPC.remove(player);
 		}
@@ -1159,10 +1159,10 @@ public class dExActions {
 			String mess = dExD.pmessage(220, "", "");
 			player.sendMessage(mess);
 			if(sign.getText(0).equals("§9[P-TRADE]")){
-				dExD.logAct(314, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", SAC.get(player), oldAmount);
+				dExD.logAct(314, player.getName(),"", "P-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", SAC.get(player), oldAmount);
 			}
 			else{
-				dExD.logAct(314, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", SAC.get(player), oldAmount);
+				dExD.logAct(314, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", SAC.get(player), oldAmount);
 			}
 			SAC.remove(player);
 		}
@@ -1354,7 +1354,7 @@ public class dExActions {
 			sign.setText(3, "~~~~~~~~");
 			sign.update();
 			STS.remove(player);
-			dExD.logAct(301, player.getName(),"", "S-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().getId()), "", "", "", "", "", "", "");
+			dExD.logAct(301, player.getName(),"", "S-TRADE", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
 		}
 		else{
 			player.notify("An error occurred");
@@ -1415,7 +1415,7 @@ public class dExActions {
 					if(notallsold){
 						dExD.ErrorMessage(player, 139);
 					}
-					dExD.logAct(318, player.getName(), "", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().getId()), items.toString(), "", "");
+					dExD.logAct(318, player.getName(), "", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().name()), items.toString(), "", "");
 				}
 			}
 			STSinUse.remove(inv);

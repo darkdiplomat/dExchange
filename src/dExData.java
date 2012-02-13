@@ -371,19 +371,11 @@ public class dExData {
 						int cx = rs.getInt("CX");
 						int cy = rs.getInt("CY");
 						int cz = rs.getInt("CZ");
-						try{
-							if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
-								etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
-							}
-						}catch (NullPointerException NPE){ } //DERP
+						etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
 						Block block = etc.getServer().getWorld(sw).getBlockAt(sx, sy, sz);
 						if ((block.getType() == 63) || (block.getType() == 68)){
 							sign = (Sign)etc.getServer().getWorld(sw).getComplexBlock(block);
-							try{
-								if(!etc.getServer().getWorld(cw).getChunk(cx, cy, cz).isLoaded()){
-									etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
-								}
-							}catch(NullPointerException NPE){ } //DERP
+							etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
 							block = etc.getServer().getWorld(cw).getBlockAt(cx, cy, cz);
 							if(block.getType() == 54){
 								chest = (Chest) etc.getServer().getWorld(cw).getOnlyComplexBlock(block);
@@ -446,19 +438,11 @@ public class dExData {
 						int cx = Integer.valueOf(ChestLoc[1]);
 						int cy = Integer.valueOf(ChestLoc[2]);
 						int cz = Integer.valueOf(ChestLoc[3]);
-						try{
-							if(!etc.getServer().getWorld(sw).getChunk(sx, sy, sz).isLoaded()){
-								etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
-							}
-						}catch(NullPointerException NPE){ }//oh well...
+						etc.getServer().getWorld(sw).loadChunk(sx, sy, sz);
 						Block block = etc.getServer().getWorld(sw).getBlockAt(sx, sy, sz);
 						if ((block.getType() == 63) || (block.getType() == 68)){
 		    				sign = (Sign)etc.getServer().getWorld(sw).getComplexBlock(block);
-		    				try{
-								if(!etc.getServer().getWorld(cw).getChunk(cx, cy, cz).isLoaded()){
-									etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
-								}
-							}catch(NullPointerException NPE){ } //DERP
+		    				etc.getServer().getWorld(cw).loadChunk(cx, cy, cz);
 		    				block = etc.getServer().getWorld(cw).getBlockAt(cx, cy, cz);
 		    				if(block.getType() == 54){
 		    					chest = (Chest) etc.getServer().getWorld(cw).getOnlyComplexBlock(block);

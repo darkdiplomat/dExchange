@@ -291,6 +291,7 @@ public class dExListener extends PluginListener {
 				if( player.canUseCommand("/dexupss") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
+						player.getWorld().loadChunk(chest.getX(), chest.getY(), chest.getZ());
 						return dExA.PlayerBuySign(player, sign, chest);
 					}
 					else{
@@ -305,6 +306,7 @@ public class dExListener extends PluginListener {
 				if( player.canUseCommand("/dexupts") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
+						player.getWorld().loadChunk(chest.getX(), chest.getY(), chest.getZ());
 						Item item = player.getItemStackInHand();
 						return dExA.PlayerSellSign(player, sign, chest, item);
 					}
@@ -320,6 +322,7 @@ public class dExListener extends PluginListener {
 				if( player.canUseCommand("/dexusss") || player.canUseCommand("/dexadmin") || player.canUseCommand("/dexall") ){
 					Chest chest = dExD.getChest(sign);
 					if(chest != null){
+						player.getWorld().loadChunk(chest.getX(), chest.getY(), chest.getZ());
 						return dExA.ServerBuySign(player, sign, chest);
 					}
 					else{
@@ -495,6 +498,15 @@ public class dExListener extends PluginListener {
 				isSet = false;
 			}
 		}
+		else if(load.getPlugin("ChestLock") != null && load.getPlugin("ChestLock").isEnabled()){
+			try{
+				isOwner = (Boolean)etc.getLoader().callCustomHook("ChestLock-API", new Object[] {player, block, "IS_OWNER"});
+			}catch(Exception E){ //API Failed/Non-Existent
+				isOwner = false;
+				isSet = false;
+			}
+		}
+		
 		if( load.getPlugin("Realms") != null && load.getPlugin("Realms").isEnabled() && !isSet){
 			try{
 				isOwner = (Boolean)load.callCustomHook("Realms-PermissionCheck", new Object[]{"INTERACT", player, block});
