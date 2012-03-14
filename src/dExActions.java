@@ -1,38 +1,17 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
-* dExchange v1.x
-* Copyright (C) 2011 Visual Illusions Entertainment
-* @author darkdiplomat <darkdiplomat@visualillusionsent.net>
-*
-* This file is part of dExchange.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with dExchange.  If not, see http://www.gnu.org/licenses/gpl.html
-*/
-
 public class dExActions {
-	dExchange dEx;
-	dExData dExD;
-	HashMap<Player, String> SAC = new HashMap<Player, String>();
-	HashMap<Player, Double> SPC = new HashMap<Player, Double>();
-	ArrayList<Player> STS = new ArrayList<Player>();
-	ArrayList<Inventory> STSinUse = new ArrayList<Inventory>();
+	private dExchange dEx;
+	private dExData dExD;
+	protected HashMap<Player, String> SAC = new HashMap<Player, String>();
+	protected HashMap<Player, Double> SPC = new HashMap<Player, Double>();
+	protected ArrayList<Player> STS = new ArrayList<Player>();
+	protected ArrayList<Inventory> STSinUse = new ArrayList<Inventory>();
 	
 	public dExActions(dExchange dEx){
 		this.dEx = dEx;
-		dExD = dEx.dExD;
+		dExD = this.dEx.dExD;
 	}
 	
 	public boolean BuyCommand(Player player, String Item, String Amount, boolean stack){
@@ -1432,3 +1411,24 @@ public class dExActions {
 		return false;
 	}
 }
+
+/*******************************************************************************\
+* dExchange v1.x                                                                *
+* Copyright (C) 2011-2012 Visual Illusions Entertainment                        *
+* @author darkdiplomat <darkdiplomat@visualillusionsent.net>                    *
+*                                                                               *
+* This file is part of dExchange.                                               *                       
+*                                                                               *
+* This program is free software: you can redistribute it and/or modify          *
+* it under the terms of the GNU General Public License as published by          *
+* the Free Software Foundation, either version 3 of the License, or             *
+* (at your option) any later version.                                           *
+*                                                                               *
+* This program is distributed in the hope that it will be useful,               *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+* GNU General Public License for more details.                                  *
+*                                                                               *
+* You should have received a copy of the GNU General Public License             *
+* along with this program.  If not, see http://www.gnu.org/licenses/gpl.html.   *
+\*******************************************************************************/

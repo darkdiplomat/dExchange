@@ -1,29 +1,9 @@
-/**
-* dExchange v1.x
-* Copyright (C) 2011 Visual Illusions Entertainment
-* @author darkdiplomat <darkdiplomat@visualillusionsent.net>
-*
-* This file is part of dExchange.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with dExchange.  If not, see http://www.gnu.org/licenses/gpl.html
-*/
 
 public class dExListener extends PluginListener {
-	dExchange dEx;
-	dExActions dExA;
-	dExData dExD;
-	int idsign = 0;
+	private dExchange dEx;
+	private dExActions dExA;
+	private dExData dExD;
+	//private int idsign = 0;
 	
 	public dExListener(dExchange dEx){
 		this.dEx = dEx;
@@ -169,7 +149,7 @@ public class dExListener extends PluginListener {
 				player.sendMessage("§7-----§6dExchange by §aDarkDiplomat§7-----");
 				player.sendMessage("§7-----§6"+dEx.version+" Installed§7-----");
 				if(!dEx.isLatest()){
-					player.sendMessage("§7-----§6An update is availible! Latest = §2"+dEx.CurrVer+"§7-----");
+					player.sendMessage("§7-----§6An update is availible! Latest = §2"+dEx.currver+"§7-----");
 				}
 				return true;
 			}
@@ -482,7 +462,7 @@ public class dExListener extends PluginListener {
 		PluginLoader load = etc.getLoader();
 		if( load.getPlugin("ChastityChest") != null && load.getPlugin("ChastityChest").isEnabled() ){
 			try{
-				isOwner = (Boolean)load.callCustomHook("ChastityChest-Check", new Object[]{player});
+				isOwner = (Boolean)load.callCustomHook("ChastityChest-Check", new Object[]{player, block});
 				isSet = true;
 			}catch(Exception E){ //API Failed/Non-Existent
 				isOwner = true;
@@ -574,10 +554,13 @@ public class dExListener extends PluginListener {
 			block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
 		}
 		if(block2.getType() == 54){
-			Sign sign = (Sign)player.getWorld().getComplexBlock(block2.getX(), block2.getY()+1, block2.getZ());
-			if (sign != null){
-				return (sign.getText(0).equals("§6[S-TRADE]"));
-			}
+		    ComplexBlock cb = player.getWorld().getComplexBlock(block2.getX(), block2.getY()+1, block2.getZ());
+		    if(cb instanceof Sign){
+		        Sign sign = (Sign)cb;
+		        if (sign != null){
+		            return (sign.getText(0).equals("§6[S-TRADE]"));
+		        }
+		    }
 		}
 			
 		return false;
@@ -625,3 +608,24 @@ public class dExListener extends PluginListener {
 		return null;
 	}
 }
+
+/*******************************************************************************\
+* dExchange v1.x                                                                *
+* Copyright (C) 2011-2012 Visual Illusions Entertainment                        *
+* @author darkdiplomat <darkdiplomat@visualillusionsent.net>                    *
+*                                                                               *
+* This file is part of dExchange.                                               *                       
+*                                                                               *
+* This program is free software: you can redistribute it and/or modify          *
+* it under the terms of the GNU General Public License as published by          *
+* the Free Software Foundation, either version 3 of the License, or             *
+* (at your option) any later version.                                           *
+*                                                                               *
+* This program is distributed in the hope that it will be useful,               *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+* GNU General Public License for more details.                                  *
+*                                                                               *
+* You should have received a copy of the GNU General Public License             *
+* along with this program.  If not, see http://www.gnu.org/licenses/gpl.html.   *
+\*******************************************************************************/

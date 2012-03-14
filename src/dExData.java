@@ -15,71 +15,50 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.logging.Logger;
-
-/**
-* dExchange v1.x
-* Copyright (C) 2011 Visual Illusions Entertainment
-* @author darkdiplomat <darkdiplomat@visualillusionsent.net>
-*
-* This file is part of dExchange.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with dExchange.  If not, see http://www.gnu.org/licenses/gpl.html
-*/
 
 public class dExData {
-	Logger log = Logger.getLogger("Minecraft");
-	String dir = "plugins/config/dExchange/";
-	String IF = "plugins/config/dExchange/ItemNameFile.txt";
-	String SCF = "plugins/config/dExchange/ChestTrade.txt";
-	String SettingFile = "plugins/config/dExchange/dExSettings.ini";
-	String Messages = "plugins/config/dExchange/Messages.txt";
-	String PSigns = "plugins/config/dExchange/PSigns.txt";
-	PropertiesFile Setting;
-	String Account = "N/A";
-	String BlackList = "";
-	dExItems dExI = new dExItems();
-	dExChest dExC;
-	dExSign dExS;
-	HashMap<Chest, dExChest> Chests;
-	HashMap<Sign, dExSign> Signs;
-	HashMap<Player, Sign> PS;
-	ArrayList<String> WholeList;
-	HashMap<String, int[]> IDD;
-	HashMap<String, Double> BuyPrice;
-	HashMap<String, Double> SellPrice;
-	FileUtility fu = new FileUtility();
-	ArrayList<Integer> BlackListedIDs;
-	boolean MySQL, CMySQL, LogAc;
-	String DataBase = "jdbc:mysql://localhost:3306/minecraft";
-	String UserName = "root";
-	String Password = "root";
-	String Driver = "com.mysql.jdbc.Driver";
-	PropertiesFile NameFix;
-	PropertiesFile Mess;
-	int MaxSigns = 0;
-	PropertiesFile PlayerSign;
-	PropertiesFile Items;
-	dExMessages dExM;
+    protected dExchange dEx;
+	private final String dir = "plugins/config/dExchange/";
+	private final String IF = "plugins/config/dExchange/ItemNameFile.txt";
+	private final String SCF = "plugins/config/dExchange/ChestTrade.txt";
+	private final String SettingFile = "plugins/config/dExchange/dExSettings.ini";
+	private final String Messages = "plugins/config/dExchange/Messages.txt";
+	private final String PSigns = "plugins/config/dExchange/PSigns.txt";
+	private PropertiesFile Setting;
+	private String Account = "N/A";
+	private String BlackList = "";
+	private dExItems dExI = new dExItems();
+	private dExChest dExC;
+	private dExSign dExS;
+	private HashMap<Chest, dExChest> Chests;
+	private HashMap<Sign, dExSign> Signs;
+	private HashMap<Player, Sign> PS;
+	private ArrayList<String> WholeList;
+	protected HashMap<String, int[]> IDD;
+	private HashMap<String, Double> BuyPrice;
+	private HashMap<String, Double> SellPrice;
+	private FileUtility fu = new FileUtility();
+	private ArrayList<Integer> BlackListedIDs;
+	protected boolean MySQL, CMySQL, LogAc;
+	private String DataBase = "jdbc:mysql://localhost:3306/minecraft";
+	private String UserName = "root";
+	private String Password = "root";
+	private String Driver = "com.mysql.jdbc.Driver";
+	private PropertiesFile NameFix;
+	private PropertiesFile Mess;
+	private int MaxSigns = 0;
+	private PropertiesFile PlayerSign;
+	//private PropertiesFile Items;
+	private dExMessages dExM;
 	
-	public dExData(){
+	public dExData(dExchange dEx){
+	    this.dEx = dEx;
 		makedirectory();
 		Setting = new PropertiesFile(SettingFile);
 		NameFix = new PropertiesFile("plugins/config/dExchange/SignNameFixer.txt");
 		Mess = new PropertiesFile(Messages);
 		PlayerSign = new PropertiesFile(PSigns);
-		Items = new PropertiesFile(IF);
+		//Items = new PropertiesFile(IF);
 		loadsettings();
 	}
 	
@@ -105,7 +84,7 @@ public class dExData {
 				out.close();
 			} 
 			catch (IOException e){
-				log.warning("[dExchange] - Unable to create properties file! Using Defaults");
+				dEx.log.warning("[dExchange] - Unable to create properties file! Using Defaults");
 			}
 		}
 		if(!ItemF.exists()){
@@ -115,7 +94,7 @@ public class dExData {
 			try {
 				SCFile.createNewFile();
 			} catch (IOException e) {
-				log.warning("[dExchange] - Unable to create ChestTrade File");
+				dEx.log.warning("[dExchange] - Unable to create ChestTrade File");
 			}
 		}
 		if(!MFile.exists()){
@@ -130,7 +109,7 @@ public class dExData {
 				in.close();
 				out.close();
 			}catch (IOException ioe){
-				log.warning("[dExchange] - Unable to load Settings File. Using defaults");
+				dEx.log.warning("[dExchange] - Unable to load Settings File. Using defaults");
 			}
 		}
 	}
@@ -151,8 +130,8 @@ public class dExData {
 			try {
 				Class.forName(Driver);
 			}catch (ClassNotFoundException cnfe) {
-				log.severe("[dExchange] - Unable to find driver class: " + Driver);
-				log.severe("[dExchange] - Disabling SQL");
+				dEx.log.severe("[dExchange] - Unable to find driver class: " + Driver);
+				dEx.log.severe("[dExchange] - Disabling SQL");
 				MySQL = false;
 			}
 		}
@@ -197,7 +176,7 @@ public class dExData {
 		if(props.containsKey(Property)){
 			value = props.getString(Property);
 		}else{
-			log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
+		    dEx.log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
 			value = defaultvalue;
 		}
 		return value;
@@ -208,7 +187,7 @@ public class dExData {
 		if(Setting.containsKey(Property)){
 			value = Setting.getBoolean(Property);
 		}else{
-			log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
+		    dEx.log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
 			value = defaultvalue;
 		}
 		return value;
@@ -220,12 +199,12 @@ public class dExData {
 			try{
 				value = Setting.getInt(Property);
 			}catch(NumberFormatException NFE){
-				log.warning("[dExchange] Bad Value at "+Property+" Using default of "+String.valueOf(defaultvalue));
+			    dEx.log.warning("[dExchange] Bad Value at "+Property+" Using default of "+String.valueOf(defaultvalue));
 				value = defaultvalue;
 			}
 		}
 		else{
-			log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
+		    dEx.log.warning("[dExchange] - Value: "+Property+" not found! Using default of "+String.valueOf(defaultvalue));
 			value = defaultvalue;
 		}
 		return value;
@@ -237,7 +216,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -256,19 +235,19 @@ public class dExData {
 							SellPrice.put(name, sell);
 							WholeList.add(get);
 						} catch (NumberFormatException NFE){
-							log.severe("[dExchange] - Unable to get data from dExchange!");
+						    dEx.log.severe("[dExchange] - Unable to get data from dExchange!");
 							continue;
 						}
 					}
 				} catch (SQLException ex) {
-					log.severe("[dExchange] - Unable to get data from dExchange!");
+				    dEx.log.severe("[dExchange] - Unable to get data from dExchange!");
 				}finally{
 					try{
 						if (conn != null){
 							conn.close();
 						}
 					}catch (SQLException sqle) {
-						log.severe("[dExchange] - Could not close connection to SQL");
+					    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 					}
 				}
 			}
@@ -296,37 +275,37 @@ public class dExData {
 						try{
 							ID = Integer.parseInt(IDsplit[0]);
 						}catch(NumberFormatException nfe){
-							log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
 							continue;
 						}catch(IndexOutOfBoundsException IOOBE){
-							log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
 							continue;
 						}
 						try{
 							damage = Integer.parseInt(IDsplit[1]);
 						}catch(NumberFormatException nfe){
-							log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
 							continue;
 						}catch(IndexOutOfBoundsException IOOBE){
-							log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
 							continue;
 						}
 						try{
 							buy = Double.parseDouble(idpricesplit[1]);
 						}catch(NumberFormatException nfe){
-							log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
 							continue;
 						}catch(IndexOutOfBoundsException IOOBE){
-							log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
 							continue;
 						}
 						try{
 							sell = Double.parseDouble(idpricesplit[2]);
 						}catch(NumberFormatException nfe){
-							log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
 							continue;
 						}catch(IndexOutOfBoundsException IOOBE){
-							log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
+						    dEx.log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
 							continue;
 						}
 						int[] IDDA = new int[]{ID, damage};
@@ -337,7 +316,7 @@ public class dExData {
 					}
 				}
 			}catch (IOException e) {
-				log.severe("[dExchange] - Unable to load in Items File");
+			    dEx.log.severe("[dExchange] - Unable to load in Items File");
 			}finally{
 				if (scanner != null){
 					scanner.close();
@@ -353,7 +332,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -407,14 +386,14 @@ public class dExData {
 						}
 	    			}
 	    		} catch (SQLException ex) {
-	    			log.severe("[dExchange] - Unable to get data from dExchange!");
+	    		    dEx.log.severe("[dExchange] - Unable to get data from dExchange!");
 	    		}finally{
 	    			try{
 	    				if (conn != null){
 	    					conn.close();
 	    				}
 	    			}catch (SQLException sqle) {
-	    				log.severe("[dExchange] - Could not close connection to SQL");
+	    			    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 	    			}
 	    		}
 			}
@@ -476,7 +455,7 @@ public class dExData {
 		    	}
 				in.close();
 			} catch (IOException e) {
-				log.severe("[dExchange] - Unable to load ChestTrade File");
+			    dEx.log.severe("[dExchange] - Unable to load ChestTrade File");
 			}
 		}
 	}
@@ -638,7 +617,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -654,14 +633,14 @@ public class dExData {
 	    			ps.setInt(8, chest.getZ());
 	    			ps.executeUpdate();
 	    		} catch (SQLException ex) {
-	    			log.severe("[dExhange] - Unable to add data to dExchangeChests!");
+	    		    dEx.log.severe("[dExhange] - Unable to add data to dExchangeChests!");
 	    		}finally{
 	    			try{
 	    				if (conn != null){
 	    					conn.close();
 	    				}
 	    			}catch (SQLException sqle) {
-	    				log.severe("[dExchange] - Could not close connection to SQL");
+	    			    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 	    			}
 	    		}
 			}
@@ -681,7 +660,7 @@ public class dExData {
 				fw.write(loc+System.getProperty("line.separator"));
 				fw.close();  
 			} catch (IOException e) {
-				log.severe("[dExchange] - Unable to Add TradeLink!");
+			    dEx.log.severe("[dExchange] - Unable to Add TradeLink!");
 			}
 		}
 	}
@@ -699,7 +678,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -715,14 +694,14 @@ public class dExData {
 	    			ps.setInt(8, chest.getZ());
 	    			ps.executeUpdate();
 	    		} catch (SQLException ex) {
-	    			log.severe("[dExchange] - Unable to delete data from dExchangeChests!");
+	    		    dEx.log.severe("[dExchange] - Unable to delete data from dExchangeChests!");
 	    		}finally{
 	    			try{
 	    				if (conn != null){
 	    					conn.close();
 	    				}
 	    			}catch (SQLException sqle) {
-	    				log.severe("[dExchange] - Could not close connection to SQL");
+	    			    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 	    			}
 	    		}
 			}
@@ -836,7 +815,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -846,7 +825,7 @@ public class dExData {
 					ps.setString(2, IName);
 					ps.executeUpdate();
 				} catch (SQLException ex) {
-					log.severe("[dExchange] - Unable to delete Item from dExchange!");
+				    dEx.log.severe("[dExchange] - Unable to delete Item from dExchange!");
 				}finally{
 					try{
 						if (ps != null){
@@ -856,7 +835,7 @@ public class dExData {
 							conn.close();
 						}
 					}catch (SQLException sqle) {
-						log.severe("[dExchange] - Could not close connection to SQL");
+					    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 					}
 				}
 			}
@@ -889,7 +868,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -899,14 +878,14 @@ public class dExData {
 					ps.setString(2, IName);
 					ps.executeUpdate();
 				} catch (SQLException ex) {
-					log.severe("[dExchange] - Unable to delete Item from dExchange!");
+				    dEx.log.severe("[dExchange] - Unable to delete Item from dExchange!");
 				}finally{
 					try{
 						if (conn != null){
 							conn.close();
 						}
 					}catch (SQLException sqle) {
-						log.severe("[dExchange] - Could not close connection to SQL");
+					    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 					}
 				}
 			}
@@ -936,7 +915,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -945,14 +924,14 @@ public class dExData {
 					ps.setString(1, IName);
 					ps.executeUpdate();
 				} catch (SQLException ex) {
-					log.severe("[dExchange] - Unable to delete Item from dExchange!");
+				    dEx.log.severe("[dExchange] - Unable to delete Item from dExchange!");
 				}finally{
 					try{
 						if (conn != null){
 							conn.close();
 						}
 					}catch (SQLException sqle) {
-						log.severe("[dExchange] - Could not close connection to SQL");
+					    dEx.log.severe("[dExchange] - Could not close connection to SQL");
 					}
 				}
 			}
@@ -980,7 +959,7 @@ public class dExData {
 			try{
 				conn = getSQLConn();
 			}catch(SQLException SQLE){
-				log.severe("[dExchange] - Unable to set MySQL Connection");
+			    dEx.log.severe("[dExchange] - Unable to set MySQL Connection");
 				conn = null;
 			}
 			if(conn != null){
@@ -994,7 +973,7 @@ public class dExData {
 	    			ps.executeUpdate();
 	    			conn.close();
 	    		} catch (SQLException ex) {
-	    			log.severe("[dExhange] - Unable to add Item to Item Lists!");
+	    		    dEx.log.severe("[dExhange] - Unable to add Item to Item Lists!");
 	    		}
 			}
 		}
@@ -1005,12 +984,12 @@ public class dExData {
 				out.write(Line);
 				out.close();
 			} catch (IOException e) {
-				log.severe("[dExhange] - Unable to add Item to Item Lists!");
+			    dEx.log.severe("[dExhange] - Unable to add Item to Item Lists!");
 			}
 		}
 		IDD.put(IName, new int[]{id, dam});
 		BuyPrice.put(IName, bp);
-		log.info(String.valueOf(BuyPrice.get(IName)));
+		dEx.log.info(String.valueOf(BuyPrice.get(IName)));
 		SellPrice.put(IName, sp);
 		WholeList.add(Line);
 	}
@@ -1044,3 +1023,24 @@ public class dExData {
 	}
 	
 }
+
+/*******************************************************************************\
+* dExchange v1.x                                                                *
+* Copyright (C) 2011-2012 Visual Illusions Entertainment                        *
+* @author darkdiplomat <darkdiplomat@visualillusionsent.net>                    *
+*                                                                               *
+* This file is part of dExchange.                                               *                       
+*                                                                               *
+* This program is free software: you can redistribute it and/or modify          *
+* it under the terms of the GNU General Public License as published by          *
+* the Free Software Foundation, either version 3 of the License, or             *
+* (at your option) any later version.                                           *
+*                                                                               *
+* This program is distributed in the hope that it will be useful,               *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+* GNU General Public License for more details.                                  *
+*                                                                               *
+* You should have received a copy of the GNU General Public License             *
+* along with this program.  If not, see http://www.gnu.org/licenses/gpl.html.   *
+\*******************************************************************************/
