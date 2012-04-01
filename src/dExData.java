@@ -164,7 +164,7 @@ public class dExData {
 	private Connection getSQLConn() throws SQLException{
 		Connection conn = null;
 		if (CMySQL){
-			conn = etc.getSQLConnection();
+			conn = etc.getConnection().getConnection();
 		}else{
 			conn = DriverManager.getConnection(DataBase, UserName, Password);	
 		}
