@@ -161,7 +161,8 @@ public class dExData {
 		dExM = new dExMessages(this, Mess);
 	}
 	
-	private Connection getSQLConn() throws SQLException{
+	@SuppressWarnings("deprecation")
+    private Connection getSQLConn() throws SQLException{
 		Connection conn = null;
 		if (CMySQL){
 			conn = etc.getSQLConnection();
@@ -277,7 +278,7 @@ public class dExData {
 						}catch(NumberFormatException nfe){
 						    dEx.log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
 							continue;
-						}catch(IndexOutOfBoundsException IOOBE){
+						}catch(ArrayIndexOutOfBoundsException AIOOBE){
 						    dEx.log.severe("[dExchange] - There was an issue with ID for ItemName:" + name);
 							continue;
 						}
@@ -286,7 +287,7 @@ public class dExData {
 						}catch(NumberFormatException nfe){
 						    dEx.log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
 							continue;
-						}catch(IndexOutOfBoundsException IOOBE){
+						}catch(ArrayIndexOutOfBoundsException AIOOBE){
 						    dEx.log.severe("[dExchange] - There was an issue with Damage for ItemName:" + name);
 							continue;
 						}
@@ -295,7 +296,7 @@ public class dExData {
 						}catch(NumberFormatException nfe){
 						    dEx.log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
 							continue;
-						}catch(IndexOutOfBoundsException IOOBE){
+						}catch(ArrayIndexOutOfBoundsException AIOOBE){
 						    dEx.log.severe("[dExchange] - There was an issue with BuyPrice for ItemName:" + name);
 							continue;
 						}
@@ -304,7 +305,7 @@ public class dExData {
 						}catch(NumberFormatException nfe){
 						    dEx.log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
 							continue;
-						}catch(IndexOutOfBoundsException IOOBE){
+						}catch(ArrayIndexOutOfBoundsException AIOOBE){
 						    dEx.log.severe("[dExchange] - There was an issue with SellPrice for ItemName:" + name);
 							continue;
 						}

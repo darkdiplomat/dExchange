@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 public class dExchange extends Plugin {
 
 	public final String name = "dExchange";
-	public final String version = "1.6";
+	public final String version = "1.5_3";
 	public String currver = version;
 	public final String author = "Darkdiplomat";
 	public final Logger log = Logger.getLogger("Minecraft");

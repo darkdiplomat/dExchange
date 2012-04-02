@@ -1342,6 +1342,7 @@ public class dExActions {
 	}
 	
 	public void onSTradeActivate(Player player, Inventory inv){
+	    STSinUse.remove(inv);
 		Inventory invp = player.getInventory();
 		Chest chest = (Chest)inv;
 		Block block = player.getWorld().getBlockAt(chest.getX(), chest.getY()+1, chest.getZ());
@@ -1397,7 +1398,6 @@ public class dExActions {
 					dExD.logAct(318, player.getName(), "", "", "", "", "", "", String.valueOf(chest.getX()), String.valueOf(chest.getY()), String.valueOf(chest.getZ()), String.valueOf(chest.getWorld().getType().name()), items.toString(), "", "");
 				}
 			}
-			STSinUse.remove(inv);
 		}
 	}
 	
