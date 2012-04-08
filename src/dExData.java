@@ -624,11 +624,11 @@ public class dExData {
 			if(conn != null){
 	    		try{
 	    			PreparedStatement ps = conn.prepareStatement("INSERT INTO dExchangeChests (SW,SX,SY,SZ,CW,CX,CY,CZ) VALUES(?,?,?,?,?,?,?,?)");
-	    			ps.setInt(1, sign.getWorld().getType().getId());
+	    			ps.setInt(1, sign.getWorld().getType().ToIndex());
 	    			ps.setInt(2, sign.getX());
 	    			ps.setInt(3, sign.getY());
 	    			ps.setInt(4, sign.getZ());
-	    			ps.setInt(5, chest.getWorld().getType().getId());
+	    			ps.setInt(5, chest.getWorld().getType().ToIndex());
 	    			ps.setInt(6, chest.getX());
 	    			ps.setInt(7, chest.getY());
 	    			ps.setInt(8, chest.getZ());
@@ -647,11 +647,11 @@ public class dExData {
 			}
 		}
 		else{
-			int sw = sign.getWorld().getType().getId();
+			int sw = sign.getWorld().getType().ToIndex();
 			int sx = sign.getX();
 			int sy = sign.getY();
 			int sz = sign.getZ();
-			int cw = chest.getWorld().getType().getId();
+			int cw = chest.getWorld().getType().ToIndex();
 			int cx = chest.getX();
 			int cy = chest.getY();
 			int cz = chest.getZ();
@@ -685,11 +685,11 @@ public class dExData {
 			if(conn != null){
 	    		try{
 	    			PreparedStatement ps = conn.prepareStatement("DELETE FROM dExchangeChests WHERE SW = ? and SX = ? and SY = ? and SZ = ? and CW = ? and CX = ? and CY = ? and CZ = ?");
-	    			ps.setInt(1, sign.getWorld().getType().getId());
+	    			ps.setInt(1, sign.getWorld().getType().ToIndex());
 	    			ps.setInt(2, sign.getX());
 	    			ps.setInt(3, sign.getY());
 	    			ps.setInt(4, sign.getZ());
-	    			ps.setInt(5, chest.getWorld().getType().getId());
+	    			ps.setInt(5, chest.getWorld().getType().ToIndex());
 	    			ps.setInt(6, chest.getX());
 	    			ps.setInt(7, chest.getY());
 	    			ps.setInt(8, chest.getZ());
@@ -708,11 +708,11 @@ public class dExData {
 			}
 		}
 		else{
-			int sw = sign.getBlock().getWorld().getType().getId();
+			int sw = sign.getBlock().getWorld().getType().ToIndex();
 			int sx = sign.getX();
 			int sy = sign.getY();
 			int sz = sign.getZ();
-			int cw = chest.getWorld().getType().getId();
+			int cw = chest.getWorld().getType().ToIndex();
 			int cx = chest.getX();
 			int cy = chest.getY();
 			int cz = chest.getZ();
