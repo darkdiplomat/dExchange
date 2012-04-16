@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: CanaryMod.jar ../plugins/dConomy.jar
+
