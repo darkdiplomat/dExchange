@@ -281,20 +281,24 @@ public class DEXUserBridge implements DEXUser{
     public float getRotation(){
         return player.getRotation();
     }
-
-    @Override
-    public DEXSign setSignPost(int x, int y, int z, int data) {
-        Block block = new Block();
-        block.setType(63);
-        block.setX(x);
-        block.setY(y);
-        block.setZ(z);
-        block.setData(data);
-        player.getWorld().setBlock(block);
-        Sign sign = (Sign)player.getWorld().getComplexBlock(block);
-        if(sign != null){
-            return new DEXSignBridge(sign);
-        }
-        return null;
+    
+    public double getX(){
+        return player.getX();
+    }
+    
+    public double getY(){
+        return player.getY();
+    }
+    
+    public double getZ(){
+        return player.getZ();
+    }
+    
+    public int getDim(){
+        return player.getWorld().getType().toIndex();
+    }
+    
+    public String getWorld(){
+        return player.getWorld().getName();
     }
 }

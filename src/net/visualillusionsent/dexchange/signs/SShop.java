@@ -60,6 +60,8 @@ public class SShop {
         sign.setText(3, priceform.format((price*amount)));
         
         user.sendMessage(Messages.M205.message());
+        user.sendMessage("TEST SUCCESS MESSAGE [SSHOP-1] (CLICK/PLACE CHEST)");
+        ds.addSign(sign);
         //dExD.logAct(301, player.getName(), "", "G-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
         return false;
     }
@@ -69,7 +71,12 @@ public class SShop {
             user.sendMessage(ErrorMessages.E102.message());
             return false;
         }
-        double price = getPrice(sign.getText(1));
+        DEXItem item = getItem(sign.getText(1));
+        if(item == null){
+            user.sendMessage(ErrorMessages.E109.message());
+            return false;
+        }
+        double price = item.getBuyPrice();
         int amount = parseAmount(sign.getText(2));
         
         if(price <= 0){
@@ -90,26 +97,18 @@ public class SShop {
             user.sendMessage(ErrorMessages.E110.message());
             return false;
         }
-        DEXItem item = getItem(sign.getText(1));
-        if(item == null){
-            user.sendMessage(ErrorMessages.E109.message());
-            return false;
-        }
+        
         if (!user.hasRoom(item.getId(), item.getDamage(), amount)){
             user.sendMessage(ErrorMessages.E111.message());
             return false;
         }
         int contains = 0;
         for(DEXChest chest : sign.getAttachedChests()){
-            if(chest.getBridge() == null){
-                DEXChest chest2 = sign.bounceChest(chest);
-                chest.setBridge(chest2.getBridge());
-            }
-            if(chest.getBridge() != null && chest.exists()){
+            if(chest.exists()){
                 contains += chest.getAmountOf(item.getId(), item.getDamage());
             }
             else{
-                sign.removeAttachedChest(chest);
+                sign.removeChest(chest);
             }
         }
         if(contains == 0){
@@ -118,16 +117,7 @@ public class SShop {
         }
         int checkamount = 0;
         for(DEXChest chest : sign.getAttachedChests()){
-            if(chest.getBridge() == null){
-                DEXChest chest2 = sign.bounceChest(chest);
-                chest.setBridge(chest2.getBridge());
-            }
-            if(chest.getBridge() != null && chest.exists()){
-                checkamount = chest.removeItem(item.getId(), item.getDamage(), checkamount);
-            }
-            else{
-                sign.removeAttachedChest(chest);
-            }
+            checkamount = chest.removeItem(item.getId(), item.getDamage(), checkamount);
             if(checkamount == 0){
                 break;
             }
@@ -135,37 +125,9 @@ public class SShop {
         user.addItems(item.getId(), item.getDamage(), amount);
         user.charge(price);
         user.payGlobal(price);
-        user.paySign(DEXProperties.getUserNameFromFix(sign.getText(3)), price);
+        //user.paySign(DEXProperties.getUserNameFromFix(sign.getText(3)), price);
         user.sendMessage("Purchased!");
         return false;
-    }
-    
-    private double getPrice(String line){
-        if(!line.matches("\\d{1,4}") && !line.matches("(\\d{1,4}):\\d{1,5}")){
-            return ds.getBuyPrice(line.toUpperCase());
-        }
-        else if (line.contains(":")){
-            String[] iddamage = line.split(":");
-            int id = 0, damage = 0;
-            try{
-                id = Integer.parseInt(iddamage[0]);
-                damage = Integer.parseInt(iddamage[1]);
-                return ds.getBuyPrice(id, damage);
-            }
-            catch(NumberFormatException nfe){
-                return -2;
-            }
-        }
-        else{
-            int id = 0;
-            try{
-                id = Integer.parseInt(line);
-                return ds.getBuyPrice(id, 0);
-            }
-            catch(NumberFormatException nfe){
-                return -2;
-            }
-        }
     }
     
     private DEXItem getItem(String line){

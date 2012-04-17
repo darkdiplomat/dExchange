@@ -45,7 +45,7 @@ public class DEXTradeSign {
             }
         }
         else if(sign.getText(0).equals("§9[P-TRADE]")){
-            String fix = DEXProperties.fixLongName(user.getName(), true);
+            String fix = "";
             if(user.getName().equals(fix)){
                 DEXProperties.getDataSource().removeSign(sign);
                 return true;

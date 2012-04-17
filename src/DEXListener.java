@@ -30,12 +30,10 @@ public class DEXListener extends PluginListener{
     public boolean onBlockBreak(Player player, Block block){
         if(block.blockType.equals(Block.Type.SignPost) || block.blockType.equals(Block.Type.WallSign)){
             Sign sign = (Sign)block.getWorld().getComplexBlock(block);
-            String type = sign.getText(0);
-            if(isShop(type) || isTrade(type)){
+            DEXSign dexsign = new DEXSignBridge(sign, null);
+            if(dexsign.isShop() || dexsign.isTrade()){
                 DEXUser user = new DEXUserBridge(player);
-                DEXSign dexsign = new DEXSignBridge(sign);
-                
-                if(isShop(type)){
+                if(dexsign.isShop()){
                     return !DEXShopSign.Destroy(user, dexsign);
                 }
                 else{
@@ -55,9 +53,9 @@ public class DEXListener extends PluginListener{
     public boolean onBlockDestroy(Player player, Block block){
         if(block.blockType.equals(Block.Type.Chest)){
             DEXUser user = new DEXUserBridge(player);
-            if(misc.isMakingPShop(user)){
+            if(misc.isConnectingPShop(user)){
                 DEXChest chest = new DEXChestBridge(block.getWorld().getComplexBlock(block));
-                misc.handleMakingPShop(user, chest, false);
+                misc.handlePShopConnections(user, chest, false);
                 return true;
             }
         }
@@ -68,20 +66,24 @@ public class DEXListener extends PluginListener{
         if(bp.blockType.equals(Block.Type.Chest)){
             if(!isProtectedArea(player, bc)){
                 DEXUser user = new DEXUserBridge(player);
-                if(misc.isMakingPShop(user)){
+                if(misc.isConnectingPShop(user)){
                     //TODO Scan for other chests
-                    bp.getWorld().setBlock(bp);
-                    logBlock(player.getName(), bp);
+                    player.getWorld().setBlock(bp);
+                    bp.setData(DEXProperties.dexserv.getChestFaceData(player.getRotation()));
+                    bp.update();
+                    //logBlock(player.getName(), bp);
                     int am = player.getItemStackInHand().getAmount() - 1;
                     player.getItemStackInHand().setAmount(am);
                     DEXChest chest = new DEXChestBridge(bp.getWorld().getComplexBlock(bp));
-                    misc.handleMakingPShop(user, chest, true);
+                    misc.handlePShopConnections(user, chest, true);
                     return true;
                 }
                 else if(misc.isMakingSTrade(user)){
                     if(!scanForChestsNear(player, bp)){
-                        bp.getWorld().setBlock(bp);
-                        logBlock(player.getName(), bp);
+                        player.getWorld().setBlock(bp);
+                        bp.setData(DEXProperties.dexserv.getChestFaceData(player.getRotation()));
+                        bp.update();
+                        //logBlock(player.getName(), bp);
                         int am = player.getItemStackInHand().getAmount() - 1;
                         player.getItemStackInHand().setAmount(am);
                         DEXChest chest = new DEXChestBridge(bp.getWorld().getComplexBlock(bp));
@@ -101,11 +103,10 @@ public class DEXListener extends PluginListener{
     public boolean onBlockRightClick(Player player, Block block, Item item){
         if(block.blockType.equals(Block.Type.SignPost) || block.blockType.equals(Block.Type.WallSign)){
             Sign sign = (Sign)block.getWorld().getComplexBlock(block);
-            String type = sign.getText(0);
-            if(isShop(type) || isTrade(type)){
+            DEXSign dexsign = new DEXSignBridge(sign, null);
+            if(dexsign.isShop() || dexsign.isTrade()){
                 DEXUser user = new DEXUserBridge(player);
-                DEXSign dexsign = new DEXSignBridge(sign);
-                if(isShop(type)){
+                if(dexsign.isShop()){
                     return DEXShopSign.Use(user, dexsign);
                 }
                 else{
@@ -170,12 +171,11 @@ public class DEXListener extends PluginListener{
     }
     
     public boolean onSignChange(Player player, Sign sign){
-        String type = sign.getText(0);
-        if(isMakingShop(type) || isMakingTrade(type)){
+        DEXSign dexsign = new DEXSignBridge(sign, null);
+        if(dexsign.isShop() || dexsign.isTrade()){
             DEXUser user = new DEXUserBridge(player);
-            DEXSign dexsign = new DEXSignBridge(sign);
             try{
-                if(isMakingShop(type)){
+                if(dexsign.isShop()){
                     return DEXShopSign.Create(user, dexsign);
                 }
                 else{
@@ -190,22 +190,6 @@ public class DEXListener extends PluginListener{
             }
         }
         return false;
-    }
-    
-    private boolean isMakingShop(String type){
-        return type.matches("\\[[GgPpSs]\\-[Ss][Hh][Oo][Pp]\\]");
-    }
-    
-    private boolean isMakingTrade(String type){
-        return type.matches("\\[[GgPp]\\-[Tt][Rr][Aa][Dd][Ee]\\]");
-    }
-    
-    private boolean isShop(String type){
-        return type.matches("\u00A7[1|5|7]\\[[G|P|S]\\-SHOP\\]");
-    }
-    
-    private boolean isTrade(String type){
-        return type.matches("\u00A7[1|9]\\[[G|S]\\-TRADE\\]");
     }
     
     private boolean scanForChestsNear(Player player, Block block){

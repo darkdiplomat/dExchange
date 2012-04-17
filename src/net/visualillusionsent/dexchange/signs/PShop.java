@@ -23,7 +23,7 @@ public class PShop{
             user.notify(ErrorMessages.E101.message());
             return true;
         }
-        if(misc.isMakingPShop(user)){
+        if(misc.isConnectingPShop(user)){
             sign.CancelPlacement();
             user.notify("Already making sign");
             return true;
@@ -35,28 +35,27 @@ public class PShop{
         }
         if(sign.getText(2).equals("")){
             sign.CancelPlacement();
+            user.notify("Amount not specified!");
+            return true;
+        }
+        if(sign.getText(3).equals("")){
+            sign.CancelPlacement();
             user.notify("Price not specified!");
             return true;
         }
-        String[] check = parseItemData(sign.getText(1));
-        if(check.equals("BLACKLISTED")){
+        String itemdata = parseItemData(sign.getText(1));
+        if(itemdata.equals("ERROR")){
             sign.CancelPlacement();
+            user.notify("SIGN ERROR!");
             return true;
         }
-        else if(check.equals("UNKNOWNITEM")){
+        else if(itemdata.equals("BLACKLISTED")){
             sign.CancelPlacement();
-            user.notify("ITEM ERROR");
+            user.notify("BLACKLISTED ITEM!");
             return true;
         }
-        else if(check.equals("NUMBERERROR")){
-            sign.CancelPlacement();
-            user.notify("NUMBERERROR");
-            return true;
-        }
-        else if(check.equals("FORMATERROR")){
-            sign.CancelPlacement();
-            user.notify("FORMATERROR");
-            return true;
+        else if(itemdata.matches("[A-Z]*")){
+            sign.setText(1, itemdata);
         }
         double price = 0;
         try{
@@ -70,19 +69,9 @@ public class PShop{
             sign.CancelPlacement();
             return true;
         }
-        String pname = DEXProperties.fixLongName(user.getName(), false);
-        if(pname == null){
-            sign.CancelPlacement();
-            return true;
-        }
-        if(check[0].matches("\\w*") && !check[0].matches("\\d*")){
-            sign.setText(1, check[0]+":"+check[1]);
-        }
-        
         sign.setText(0, "§5[P-SHOP]");
-        sign.setText(2, priceform.format(price));
-        sign.setText(3, pname);
-        misc.addMakingPShop(user, sign);
+        sign.setText(3, priceform.format(price));
+        misc.addConnectingPShop(user, sign);
         user.sendMessage("TEST SUCCESS MESSAGE [PSHOP-1] (CLICK/PLACE CHEST)");
         ds.addSign(sign);
         //dExD.logAct(301, player.getName(),"", "P-SHOP", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", "", "", "");
@@ -95,9 +84,9 @@ public class PShop{
             user.sendMessage(ErrorMessages.E102.message());
             return true;
         }
-        String pname = DEXProperties.fixLongName(user.getName(), true);
+        String pname = "";//DEXProperties.fixLongName(user.getName(), true);
         if(sign.getText(3).equals(pname)){
-            String[] check = parseItemData(sign.getText(1));
+            String itemdata = parseItemData(sign.getText(1));
             int id = 0, damage = 0, contains = 0, numofchests = 0;
             if(check[0].equals("BLACKLISTED")){
                 user.sendMessage(ErrorMessages.E107.message());
@@ -119,16 +108,12 @@ public class PShop{
                 }
             }
             for(DEXChest chest : sign.getAttachedChests()){
-                if(chest.getBridge() == null){
-                    DEXChest chest2 = sign.bounceChest(chest);
-                    chest.setBridge(chest2.getBridge());
-                }
-                if(chest.getBridge() != null && chest.exists()){
+                if(chest.exists()){
                     contains += chest.getAmountOf(id, damage);
                     numofchests++;
                 }
                 else{
-                    sign.removeAttachedChest(chest);
+                    sign.removeChest(chest);
                 }
             }
             user.sendMessage(String.valueOf(contains) +" "+String.valueOf(numofchests));
@@ -169,15 +154,11 @@ public class PShop{
             }
             int checkamount = amount;
             for(DEXChest chest : sign.getAttachedChests()){
-                if(chest.getBridge() == null){
-                    DEXChest chest2 = sign.bounceChest(chest);
-                    chest.setBridge(chest2.getBridge());
-                }
-                if(chest.getBridge() != null && chest.exists()){
+                if(chest.exists()){
                     contains += chest.getAmountOf(id, damage);
                 }
                 else{
-                    sign.removeAttachedChest(chest);
+                    sign.removeChest(chest);
                 }
             }
             if(contains == 0){
@@ -185,84 +166,55 @@ public class PShop{
                 return true;
             }
             for(DEXChest chest : sign.getAttachedChests()){
-                if(chest.getBridge() == null){
-                    DEXChest chest2 = sign.bounceChest(chest);
-                    chest.setBridge(chest2.getBridge());
-                }
-                if(chest.getBridge() != null && chest.exists()){
-                    checkamount = chest.removeItem(id, damage, checkamount);
-                }
-                else{
-                    sign.removeAttachedChest(chest);
-                }
+                checkamount = chest.removeItem(id, damage, checkamount);
                 if(checkamount == 0){
                     break;
                 }
             }
             user.addItems(id, damage, amount);
             user.charge(price);
-            user.paySign(DEXProperties.getUserNameFromFix(sign.getText(3)), price);
+            //user.paySign(DEXProperties.getUserNameFromFix(sign.getText(3)), price);
             user.sendMessage("Purchased!");
         }
         return false;
     }
     
-    private String[] parseItemData(String line){
-        String[] data = line.toUpperCase().split(":");
-        try{
-            if(line.matches("(\\w*):\\d*") && !line.matches("(\\d*):\\d*")){
-                DEXItem item = ds.getItem(data[0].toUpperCase());
-                if (item != null){
-                    if(!DEXProperties.isBlackListed(item.getId(), item.getDamage())){
-                        data[0] = data[0].toUpperCase();
-                        Integer.parseInt(data[1]);
-                    }
-                    else{
-                        data[0] = "BLACKLISTED";
-                    }
-                }
-                else{
-                    data[0] = "UNKNOWNITEM";
-                }
-            }
-            else if (!line.contains(":")){
-                data[0] = "FORMATERROR";
-                return data;
-            }
-            else{
-                int id = 0, damage = 0, amount = 0;
-                if(line.matches("(\\d*):\\d*")){
-                    id = Integer.parseInt(data[0]);
-                    amount = Integer.parseInt(data[1]);
-                    if(DEXProperties.isBlackListed(id, damage)){
-                        data[0] = "BLACKLISTED";
-                    }
-                    DEXItem item = ds.getItem(id, damage);
-                    String lengthcheck = item.getName()+":"+amount;
-                    if(lengthcheck.length() < 16){
-                        data[0] = item.getName();
-                    }
-                }
-                else{
-                    id = Integer.parseInt(data[0]);
-                    damage = Integer.parseInt(data[1]);
-                    Integer.parseInt(data[2]);
-                    if(DEXProperties.isBlackListed(id, damage)){
-                        data[0] = "BLACKLISTED";
-                    }
-                    DEXItem item = ds.getItem(id, damage);
-                    String lengthcheck = item.getName()+":"+amount;
-                    if(lengthcheck.length() < 16){
-                        data = new String[2];
-                        data[0] = item.getName();
-                        data[1] = String.valueOf(amount);
-                    }
-                }
+    private String parseItemData(String line){
+        int id = 0, damage = 0;
+        if(!line.matches("\\d{1,4}") && !line.matches("(\\d{1,4}):\\d{1,5}")){
+            line = line.toUpperCase();
+            DEXItem dexitem = ds.getItem(line);
+            if(dexitem == null){
+                return "ERROR";
             }
         }
-        catch(NumberFormatException nfe){
-            data[0] = "NUMBERERROR";
+        else if (line.contains(":")){
+            String[] iddamage = line.split(":");
+            try{
+                id = Integer.parseInt(iddamage[0]);
+                damage = Integer.parseInt(iddamage[1]);
+            }
+            catch(NumberFormatException nfe){
+                return "ERROR";
+            }
         }
-        return data;
+        else{
+            try{
+                id = Integer.parseInt(line);
+            }
+            catch(NumberFormatException nfe){
+                return "ERROR";
+            }
+        }
+        if(DEXProperties.isBlackListed(id, damage)){
+            return "BLACKLISTED";
+        }
+        DEXItem dexitem = ds.getItem(id, damage);
+        if(dexitem != null){
+            if(dexitem.getName().length() < 16){
+                return dexitem.getName();
+            }
+        }
+        return line;
     }
 }

@@ -65,6 +65,10 @@ public class GTrade {
     }
     
     private double getPrice(int id, int damage){
-        return ds.getSellPrice(id, damage);
+        DEXItem item = ds.getItem(id, damage);
+        if(item != null){
+            return item.getSellPrice();
+        }
+        return -1;
     }
 }

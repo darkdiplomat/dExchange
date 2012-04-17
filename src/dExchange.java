@@ -21,7 +21,8 @@ public class dExchange extends Plugin{
             logger.info("A new version is availible! v"+vc.getCurrentVersion());
         }
         logger.info(this.getName()+" v"+DEXCommand.version+" initializing...");
-        dExP = new DEXProperties();
+        
+        dExP = new DEXProperties(new DEXServerBridge());
         if(dExP.load()){
             dExL = new DEXListener(new DEXMisc());
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_BROKEN, dExL, this, PluginListener.Priority.MEDIUM);

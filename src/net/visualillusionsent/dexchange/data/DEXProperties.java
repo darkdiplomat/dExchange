@@ -9,25 +9,30 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import net.visualillusionsent.dexchange.DEXServer;
+
 public class DEXProperties {
     public static final Logger logger = Logger.getLogger("Minecraft");
     public static final String dirloc = "plugins/config/dExchange/";
     public static String gacc;
     public static boolean logact;
     public static int gmaxs;
+    public static DEXServer dexserv;
     
     private final File dir = new File(dirloc);
     private final File readme = new File(dirloc+"README.txt");
     private final File settings = new File(dirloc+"dExSettings.ini");
     private final File messages = new File(dirloc+"Messages.txt");
-    private final File namefix = new File(dirloc+"SignNameFixer.txt");
     private Properties dExSettings = new Properties();
-    private static Properties dExNameFix = new Properties();
     private String database, username, password, driver;
     private boolean mysql, cmysql;
     private static ArrayList<Integer[]> blacklist = new ArrayList<Integer[]>();
     
     private static DEXDataSource dexds;
+    
+    public DEXProperties(DEXServer dexserver){
+        dexserv = dexserver;
+    }
     
     public static DEXDataSource getDataSource(){
         return dexds;
@@ -56,9 +61,6 @@ public class DEXProperties {
             return false;
         }
         if(!loadMessages()){
-            return false;
-        }
-        if(!loadNameFix()){
             return false;
         }
         if(!dexds.load()){
@@ -187,21 +189,6 @@ public class DEXProperties {
         return true;
     }
     
-    private boolean loadNameFix(){
-        logger.info("[dExchange] Loading Name Fix File...");
-        try{
-            FileInputStream stream = new FileInputStream(namefix);
-            dExNameFix.load(stream);
-            stream.close();
-        }
-        catch(IOException ex){
-            logger.info("[dExchange] Failed to load name fixes! dExchange will now be terminated...");
-            return false;
-        }
-        logger.info("[dExchange] Name Fix file loaded successfully!");
-        return true;
-    }
-    
     private String parseString(String defaultvalue, String property){
         String value;
         if(dExSettings.containsKey(property)){
@@ -280,48 +267,6 @@ public class DEXProperties {
     private boolean loadMessages(){
         
         return true;
-    }
-    
-    public static String fixLongName(String username, boolean checkonly){
-        if(username.length() < 16){
-            return username;
-        }
-        if(dExNameFix.containsValue(username)){
-            for(Object key : dExNameFix.keySet()){
-                if(username.equals(dExNameFix.get(key))){
-                    return (String)key;
-                }
-            }
-        }
-        else if(checkonly){
-            return username;
-        }
-        String newname = username.substring(0, 14);
-        String[] fixes = new String[]{ newname+"~", newname+"*", newname+"#", newname+"&", newname+"^", newname+"%", newname+"-", newname+"_", newname+"$", newname+"`"};
-        for(String fix : fixes){
-            if(!dExNameFix.containsKey(fix)){
-                dExNameFix.setProperty(fix, username);
-                return fix;
-            }
-        }
-        newname = username.substring(0, 13);
-        fixes = new String[]{ newname+"~~", newname+"~*", newname+"~#", newname+"~&", newname+"~^", newname+"~%", newname+"~-", newname+"~_", newname+"~$", newname+"~`",
-                              newname+"*~", newname+"**", newname+"*#", newname+"*&", newname+"*^", newname+"*%", newname+"*-", newname+"*_", newname+"*$", newname+"*`", 
-                              newname+"#~", newname+"#*", newname+"##", newname+"#&", newname+"#^", newname+"#%", newname+"#-", newname+"#_", newname+"#$", newname+"#`"};
-        for(String fix : fixes){
-            if(!dExNameFix.containsKey(fix)){
-                dExNameFix.setProperty(fix, username);
-                return fix;
-            }
-        }
-        return null;
-    }
-    
-    public static String getUserNameFromFix(String fixedname){
-        if(dExNameFix.containsKey(fixedname)){
-            return dExNameFix.getProperty(fixedname);
-        }
-        return fixedname;
     }
     
     public static boolean isBlackListed(int id, int damage){

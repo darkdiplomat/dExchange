@@ -13,7 +13,7 @@ public class STrade {
         double payout = 0;
         boolean notempty = false, notall = false;
         StringBuilder sold = new StringBuilder();
-        for(DEXItem item : chest.contents()){
+        for(DEXItem item : chest.getContents()){
             if(item != null){
                 notempty = true;
                 int id = item.getId(), amount = item.getAmount(), damage = item.getDamage();
@@ -21,20 +21,20 @@ public class STrade {
                 if (itemcheck == null){
                     notall = true;
                     user.giveItem(item);
-                    chest.removeItem(item);
+                    chest.removeItem(id, damage, amount);
                     continue;
                 }
                 double price = itemcheck.getSellPrice();
                 if(price <= 0){
                     notall = true;
                     user.giveItem(item);
-                    chest.removeItem(item);
+                    chest.removeItem(id, damage, amount);
                     continue;
                 }
                 user.sendMessage(""+item.getAmount());
                 price *= amount;
                 payout += price;
-                chest.removeItem(item);
+                chest.removeItem(id, damage, amount);
                 sold.append(itemcheck.getName()+"("+amount+") ");
             }
         }

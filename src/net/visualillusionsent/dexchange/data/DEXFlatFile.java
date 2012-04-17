@@ -107,14 +107,20 @@ public class DEXFlatFile extends DEXDataSource{
                 while((line = in.readLine()) != null){
                     String[] sc = line.split(":");
                     String[] siloc = sc[0].split(",");
-                    DEXSign sign = new DEXSign(Integer.valueOf(siloc[0]), Integer.valueOf(siloc[1]), Integer.valueOf(siloc[2]), Integer.valueOf(siloc[3]), siloc[4]);
-                    String[] chlocs = sc[1].split(";");
-                    for(String chloc : chlocs){
-                        String[] loc = chloc.split(",");
-                        DEXChest chest = new DEXChest(Integer.valueOf(loc[0]), Integer.valueOf(loc[1]), Integer.valueOf(loc[2]), Integer.valueOf(loc[3]), loc[4]);
-                        sign.attachChest(chest);
+                    Object sign = DEXProperties.dexserv.getSignObj(Integer.valueOf(siloc[0]), Integer.valueOf(siloc[1]), Integer.valueOf(siloc[2]), Integer.valueOf(siloc[3]), siloc[4]);
+                    if(sign != null){
+                        DEXSign dexsign = DEXProperties.dexserv.createSign(sign, new String[0]);
+                        String[] chlocs = sc[1].split(";");
+                        for(String chloc : chlocs){
+                            String[] loc = chloc.split(",");
+                            Object chest = DEXProperties.dexserv.getChestObj(Integer.valueOf(loc[0]), Integer.valueOf(loc[1]), Integer.valueOf(loc[2]), Integer.valueOf(loc[3]), loc[4]);
+                            if(chest != null){
+                                DEXChest dexchest = DEXProperties.dexserv.createChest(chest);
+                                dexsign.attachChest(dexchest);
+                            }
+                        }
+                        signs.add(dexsign);
                     }
-                    signs.add(sign);
                 }
                 in.close();
             }

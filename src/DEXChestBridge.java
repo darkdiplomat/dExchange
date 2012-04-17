@@ -1,12 +1,12 @@
 import net.visualillusionsent.dexchange.DEXChest;
 import net.visualillusionsent.dexchange.DEXItem;
-import net.visualillusionsent.dexchange.DEXSign;
 
-public class DEXChestBridge extends DEXChest{
+public class DEXChestBridge implements DEXChest{
     private Inventory chestinv;
+    private int x, y, z, dim;
+    private String world;
     
-    public DEXChestBridge(Object chestinv) throws IllegalArgumentException{
-        super(chestinv);
+    public DEXChestBridge(Object chestinv){
         if(!(chestinv instanceof Chest)){
             if(!(chestinv instanceof DoubleChest)){
                 throw new IllegalArgumentException("Inventory was not an instance of Chest/DoubleChest");
@@ -30,8 +30,6 @@ public class DEXChestBridge extends DEXChest{
             this.dim = chest.getWorld().getType().toIndex();
             this.world = chest.getWorld().getName();
         }
-
-        this.bridge = this;
     }
     
     @Override
@@ -64,11 +62,7 @@ public class DEXChestBridge extends DEXChest{
         if(wor == null){
             return false;
         }
-        try{
-            if(!wor[dim].isChunkLoaded(x, y, z)){
-                wor[dim].loadChunk(x, y, z);
-            }
-        }catch(Exception e){}
+        wor[dim].loadChunk(x, y, z);
         Block block = etc.getServer().getWorld(world)[dim].getBlockAt(x, y, z);
         if(block.blockType.equals(Block.Type.Chest)){
             ComplexBlock cb = block.getWorld().getComplexBlock(block);
@@ -80,49 +74,8 @@ public class DEXChestBridge extends DEXChest{
         return false;
     }
     
-    public void setBridge(DEXChest bridge){
-        this.bridge = this;
-    }
-    
-    public DEXChest getBridge(){
-        return this;
-    }
-    
     @Override
-    public Object getChestInv(){
-        exists();
-        return chestinv;
-    }
-    
-    @Override
-    public boolean equals(Object obj){
-        return ((DEXChest) obj).hashCode() == hashCode();
-    }
-    
-    public DEXSign bounceSign(DEXSign sign){
-        int x = sign.getX(), y = sign.getY(), z = sign.getZ();
-        World[] wor = etc.getServer().getWorld(sign.getWorld());
-        if(wor == null){
-            return null;
-        }
-        try{
-            if(!wor[sign.getDim()].isChunkLoaded(x, y, z)){
-                wor[sign.getDim()].loadChunk(x, y, z);
-            }
-        }catch(Exception e){}
-        Block block = etc.getServer().getWorld(sign.getWorld())[sign.getDim()].getBlockAt(x, y, z);
-        if(block.blockType.equals(Block.Type.SignPost) || block.blockType.equals(Block.Type.WallSign)){
-            ComplexBlock cb = block.getWorld().getComplexBlock(block);
-            if(cb != null && (cb instanceof Sign)){
-                DEXSign newsign = new DEXSignBridge(cb);
-                return newsign;
-            }
-        }
-        return null;
-    }
-    
-    @Override
-    public DEXItem[] contents(){
+    public DEXItem[] getContents(){
         if(chestinv != null){
             DEXItem[] dexitems = new DEXItemBridge[chestinv.getContentsSize()];
             int index = 0;
@@ -133,14 +86,6 @@ public class DEXChestBridge extends DEXChest{
             return dexitems;
         }
         return new DEXItem[1];
-    }
-    
-    @Override
-    public void removeItem(DEXItem dexitem){
-        if(dexitem.getItem() != null){
-            chestinv.removeItem((Item)dexitem.getItem());
-        }
-        chestinv.update();
     }
     
     public int removeItem(int id, int damage, int amount){
@@ -168,22 +113,55 @@ public class DEXChestBridge extends DEXChest{
         }
         return amount;
     }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getZ() {
+        return z;
+    }
+
+    @Override
+    public int getDim() {
+        return dim;
+    }
+
+    @Override
+    public String getWorld() {
+        return world;
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        return ((DEXChest) obj).hashCode() == hashCode();
+    }
+    
+    @Override
+    public int hashCode(){
+        String hashget = "dExchange:DarkDiplomat:DEXChest:"+x+":"+y+":"+z+":"+":"+dim+":"+world;
+        return hashget.hashCode();
+    }
     
     @Override
     public String toString(){
         StringBuilder toRet = new StringBuilder();
-        Chest chest = (Chest) chestinv;
-        toRet.append(chest.getX());
+        toRet.append(x);
         toRet.append(",");
-        toRet.append(chest.getY());
+        toRet.append(y);
         toRet.append(",");
-        toRet.append(chest.getZ());
+        toRet.append(z);
         toRet.append(",");
-        toRet.append(chest.getWorld().getType().getId());
+        toRet.append(dim);
         toRet.append(",");
-        toRet.append(chest.getWorld().getName());
+        toRet.append(world);
         return toRet.toString();
     }
-    
-    
 }

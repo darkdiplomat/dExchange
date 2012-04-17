@@ -68,7 +68,12 @@ public class GShop{
             user.sendMessage(ErrorMessages.E102.message());
             return false;
         }
-        double price = getPrice(sign.getText(1));
+        DEXItem item = getItem(sign.getText(1));
+        if(item == null){
+            user.sendMessage(ErrorMessages.E109.message());
+            return false;
+        }
+        double price = item.getBuyPrice();
         int amount = parseAmount(sign.getText(2));
         
         if(price <= 0){
@@ -89,11 +94,7 @@ public class GShop{
             user.sendMessage(ErrorMessages.E110.message());
             return false;
         }
-        DEXItem item = getItem(sign.getText(1));
-        if(item == null){
-            user.sendMessage(ErrorMessages.E109.message());
-            return false;
-        }
+        
         if (!user.hasRoom(item.getId(), item.getDamage(), amount)){
             user.sendMessage(ErrorMessages.E111.message());
             return false;
@@ -107,34 +108,6 @@ public class GShop{
         //player.sendMessage(L2);
         //dExD.logAct(309, player.getName(), "", "", String.valueOf(sign.getX()), String.valueOf(sign.getY()), String.valueOf(sign.getZ()), String.valueOf(sign.getWorld().getType().name()), "", "", "", "", Item, String.valueOf(a), "");
         return true;
-    }
-    
-    private double getPrice(String line){
-        if(!line.matches("\\d{1,4}") && !line.matches("(\\d{1,4}):\\d{1,5}")){
-            return ds.getBuyPrice(line.toUpperCase());
-        }
-        else if (line.contains(":")){
-            String[] iddamage = line.split(":");
-            int id = 0, damage = 0;
-            try{
-                id = Integer.parseInt(iddamage[0]);
-                damage = Integer.parseInt(iddamage[1]);
-                return ds.getBuyPrice(id, damage);
-            }
-            catch(NumberFormatException nfe){
-                return -2;
-            }
-        }
-        else{
-            int id = 0;
-            try{
-                id = Integer.parseInt(line);
-                return ds.getBuyPrice(id, 0);
-            }
-            catch(NumberFormatException nfe){
-                return -2;
-            }
-        }
     }
     
     private DEXItem getItem(String line){

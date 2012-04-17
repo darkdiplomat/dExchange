@@ -17,50 +17,6 @@ public abstract class DEXDataSource {
     abstract boolean load();
     public abstract void save();
     
-    public double getBuyPrice(int id, int damage){
-        if(!items.isEmpty()){
-            for(DEXItem dexitem : items){
-                if(dexitem.equals(id, damage)){
-                    return dexitem.getBuyPrice();
-                }
-            }
-        }
-        return -1;
-    }
-    
-    public double getBuyPrice(String name){
-        if(!items.isEmpty()){
-            for(DEXItem dexitem : items){
-                if(dexitem.equals(name)){
-                    return dexitem.getBuyPrice();
-                }
-            }
-        }
-        return -1;
-    }
-    
-    public double getSellPrice(int id, int damage){
-        if(!items.isEmpty()){
-            for(DEXItem dexitem : items){
-                if(dexitem.equals(id, damage)){
-                    return dexitem.getSellPrice();
-                }
-            }
-        }
-        return -1;
-    }
-    
-    public double getSellPrice(String name){
-        if(!items.isEmpty()){
-            for(DEXItem dexitem : items){
-                if(dexitem.equals(name)){
-                    return dexitem.getSellPrice();
-                }
-            }
-        }
-        return -1;
-    }
-    
     public DEXItem getItem(int id, int damage){
         if(!items.isEmpty()){
             for(DEXItem dexitem : items){
@@ -90,52 +46,39 @@ public abstract class DEXDataSource {
         return null;
     }
     
-    public DEXSign getSign(DEXChest chest){
-        for(DEXSign dexsign : signs){
-            if(dexsign.getAttachedChests() != null){
-                for(DEXChest dexchests : dexsign.getAttachedChests()){
-                    if(dexchests.equals(chest)){
-                        return dexsign;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-    
     public void removeSign(DEXSign sign){
         signs.remove(sign);
     }
     
     public void addSign(DEXSign sign){
-        if(signs.contains(sign)){
-            signs.remove(sign);
-        }
         signs.add(sign);
+    }
+    
+    public void removeChest(DEXChest chest){
+        for(DEXSign sign : signs){
+            if(sign.isAttached(chest)){
+                sign.removeChest(chest);
+            }
+        }
     }
     
     public boolean isDEXChestOwner(DEXUser user, DEXChest chest){
         if(user.isAdmin()){
             return true;
         }
-        String pname = DEXProperties.fixLongName(user.getName(), true);
-        if(pname == null){
-            return false;
-        }
+        boolean isConnected = false;
         synchronized(signs){
             for(DEXSign sign : signs){
-                if(sign.getBridge() == null){
-                    sign.attachBridge(chest.bounceSign(sign));
-                }
-                if(sign.getBridge() == null){
-                    continue;
-                }
                 if(sign.isAttached(chest)){
-                    if(!sign.getText(3).equals(pname)){
-                        return false;
+                    isConnected = true;
+                    if(sign.isOwner(user.getName())){
+                        return true;
                     }
                 }
             }
+        }
+        if(!isConnected){
+            return false;
         }
         return true;
     }

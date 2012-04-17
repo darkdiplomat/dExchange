@@ -30,25 +30,19 @@ public class DEXShopSign {
         else if(sign.getText(0).equalsIgnoreCase("§5[P-SHOP]")){
             DEXSign sign2 = DEXProperties.getDataSource().getSign(sign);
             if(sign2 != null){
-                if(sign2.getBridge() == null){
-                    sign2.attachBridge(sign);
-                }
                 return pshop.Use(user, sign2);
             }
             else{
-                user.sendMessage("DERP");
+                user.sendMessage("Unable to retrieve data for this sign...");
             }
         }
         else if(sign.getText(0).equalsIgnoreCase("§7[S-SHOP]")){
             DEXSign sign2 = DEXProperties.getDataSource().getSign(sign);
             if(sign2 != null){
-                if(sign2.getBridge() == null){
-                    sign2.attachBridge(sign);
-                }
                 return sshop.Use(user, sign2);
             }
             else{
-                user.sendMessage("DERP");
+                user.sendMessage("Unable to retrieve data for this sign...");
             }
         }
         return false;
@@ -57,10 +51,7 @@ public class DEXShopSign {
     public static boolean Destroy(DEXUser user, DEXSign sign){
         if(user.isAdmin()){
             DEXProperties.getDataSource().removeSign(sign);
-            String pname = DEXProperties.getUserNameFromFix(sign.getText(3));
-            if(pname != null && DEXMisc.instance.isMakingPShop(pname)){
-                DEXMisc.instance.removeMakingPShop(pname);
-            }
+            DEXMisc.instance.cancelConnectingPShop(sign);
             return true;
         }
         else if(sign.getText(0).equals("§1[G-SHOP]")){
@@ -69,9 +60,7 @@ public class DEXShopSign {
             }
         }
         else if(sign.getText(0).equals("§5[P-SHOP")){
-            String fix = DEXProperties.fixLongName(user.getName(), true);
-            
-            if(user.getName().equals(fix)){
+            if(sign.isOwner(user.getName())){
                 DEXProperties.getDataSource().removeSign(sign);
                 return true;
             }

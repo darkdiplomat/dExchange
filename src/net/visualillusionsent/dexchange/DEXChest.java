@@ -1,99 +1,21 @@
 package net.visualillusionsent.dexchange;
 
-public class DEXChest {
-    protected int x, y, z, dim;
-    protected String world;
-    protected DEXChest bridge;
+public interface DEXChest {
     
-    public DEXChest(int x, int y, int z, int dim, String world){
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.dim = dim;
-        this.world = world;
-    }
+    public int getAmountOf(int id, int damage);
+    public boolean hasEnough(int id, int damage, int amount);
+    public int removeItem(int id, int damage, int amount);
+    public DEXItem[] getContents();
     
-    public DEXChest (Object chestinv)throws IllegalArgumentException{}
+    public boolean exists();
+    public boolean equals(Object obj);
     
-    public boolean exists(){
-        return bridge.exists();
-    }
+    public int getX();
+    public int getY();
+    public int getZ();
+    public int getDim();
+    public String getWorld();
     
-    public void setBridge(DEXChest bridge){
-        this.bridge = bridge;
-    }
-    
-    public DEXChest getBridge(){
-        return bridge;
-    }
-    
-    public Object getChestInv(){
-        return bridge.getChestInv();
-    }
-    
-    public boolean equals(Object obj){
-        return bridge.equals(obj);
-    }
-    
-    public int getAmountOf(int id, int damage){
-        return bridge.getAmountOf(id, damage);
-    }
-    
-    public boolean hasEnough(int id, int damage, int amount){
-        return bridge.hasEnough(id, damage, amount);
-    }
-    
-    public int getX(){
-        return x;
-    }
-    
-    public int getY(){
-        return y;
-    }
-    
-    public int getZ(){
-        return z;
-    }
-    
-    public int getDim(){
-        return dim;
-    }
-    
-    public String getWorld(){
-        return world;
-    }
-    
-    public DEXItem[] contents(){
-        return bridge.contents();
-    }
-    
-    public void removeItem(DEXItem item){
-        bridge.removeItem(item);
-    }
-    
-    public int removeItem(int id, int damage, int amount){
-        return bridge.removeItem(id, damage, amount);
-    }
-    
-    public int hashCode(){
-        return toString().hashCode();
-    }
-    
-    public DEXSign bounceSign(DEXSign sign){
-        return bridge.bounceSign(sign);
-    }
-    
-    public String toString(){
-        StringBuilder toRet = new StringBuilder();
-        toRet.append(x);
-        toRet.append(",");
-        toRet.append(y);
-        toRet.append(",");
-        toRet.append(z);
-        toRet.append(",");
-        toRet.append(dim);
-        toRet.append(",");
-        toRet.append(world);
-        return toRet.toString();
-    }
+    public int hashCode();
+    public String toString();
 }

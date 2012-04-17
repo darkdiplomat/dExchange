@@ -9,47 +9,71 @@ import net.visualillusionsent.dexchange.data.DEXProperties;
 
 public class DEXMisc {
     public static DEXMisc instance;
-    public HashMap<String, DEXSign> makePShop = new HashMap<String, DEXSign>();
-    private static ArrayList<DEXUser> makeSTrade = new ArrayList<DEXUser>();
-    private static ArrayList<DEXChest> usingSTrade = new ArrayList<DEXChest>();
+    public HashMap<String, DEXSign> connectPShop = new HashMap<String, DEXSign>();
+    public HashMap<String, DEXSign> connectSShop = new HashMap<String, DEXSign>();
+    private ArrayList<DEXUser> makeSTrade = new ArrayList<DEXUser>();
+    private ArrayList<DEXChest> usingSTrade = new ArrayList<DEXChest>();
     private Timer resetSTrade = new Timer();
     
     public DEXMisc(){
         instance = this;
     }
     
-    public boolean isMakingPShop(DEXUser user){
-        return makePShop.containsKey(user.getName());
+    public boolean isConnectingPShop(DEXUser user){
+        return connectPShop.containsKey(user.getName());
     }
     
-    public boolean isMakingPShop(String name){
-        return makePShop.containsKey(name);
+    public boolean isConnectingPShop(String name){
+        return connectPShop.containsKey(name);
     }
     
-    public void addMakingPShop(DEXUser user, DEXSign sign){
-        makePShop.put(user.getName(), sign);
+    public void addConnectingPShop(DEXUser user, DEXSign sign){
+        connectPShop.put(user.getName(), sign);
     }
     
-    public void removeMakingPShop(DEXUser user){
-        makePShop.remove(user.getName());
+    public void removeConnectingPShop(DEXUser user){
+        connectPShop.remove(user.getName());
     }
     
-    public void removeMakingPShop(String name){
-        makePShop.remove(name);
+    public void removeConnectingPShop(String name){
+        connectPShop.remove(name);
     }
     
-    public void handleMakingPShop(DEXUser user, DEXChest chest, boolean placed){
-        DEXSign sign = makePShop.get(user.getName());
+    public void cancelConnectingPShop(DEXSign sign){
+        if(connectPShop.containsValue(sign)){
+            for(String username : connectPShop.keySet()){
+                if(connectPShop.get(username).equals(sign)){
+                    connectPShop.remove(username);
+                    break;
+                }
+            }
+        }
+    }
+    
+    public void handlePShopConnections(DEXUser user, DEXChest chest, boolean placed){
+        DEXSign sign = connectPShop.get(user.getName());
         if(DEXProperties.getDataSource().isDEXChestOwner(user, chest) || placed){
             sign.attachChest(chest);
-            makePShop.remove(user.getName());
+            connectPShop.remove(user.getName());
             DEXProperties.getDataSource().addSign(sign);
             user.sendMessage("SUCCESS");
             DEXProperties.getDataSource().save();
         }
         else{
-            
+            user.notify("NOT CHEST OWNER!");
         }
+    }
+    
+    public void handleSShopConnections(DEXUser user, DEXChest chest, boolean placed){
+        DEXSign sign = connectSShop.get(user.getName());
+        if(DEXProperties.getDataSource().isDEXChestOwner(user, chest) || placed){
+            sign.attachChest(chest);
+            connectSShop.remove(user.getName());
+            DEXProperties.getDataSource().addSign(sign);
+            user.sendMessage("SUCCESS");
+            DEXProperties.getDataSource().save();
+        }
+        user.notify("NOT CHEST OWNER!");
     }
     
     public boolean isMakingSTrade(DEXUser user){
@@ -69,16 +93,16 @@ public class DEXMisc {
         if(rot < 0){ rot *= -1; } //Fix negative rotation
         DEXSign sign = null;
         if((rot >= 0 && rot < 45) || (rot >= 315 && rot < 361)){
-            sign = user.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), (0 | 0x8));
+            sign = DEXProperties.dexserv.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), 0x8, user.getDim(), user.getWorld());
         }
         else if(rot >= 45 && rot < 115){
-            sign = user.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), (0 | 0x4));
+            sign = DEXProperties.dexserv.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), 0x4, user.getDim(), user.getWorld());
         }
         else if(rot >= 115 && rot < 225){
-            sign = user.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), (0 | 0x0));
+            sign = DEXProperties.dexserv.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), 0x0, user.getDim(), user.getWorld());
         }
         else if(rot >= 225 && rot < 315){
-            sign = user.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), (0 | 0xC));
+            sign = DEXProperties.dexserv.setSignPost(chest.getX(), chest.getY()+1, chest.getZ(), 0xC, user.getDim(), user.getWorld());
         }
         if(sign != null){
             sign.setText(0, "§6[S-TRADE]");
@@ -109,11 +133,37 @@ public class DEXMisc {
     
     public boolean destroyDEXChest(DEXUser user, DEXChest chest){
         if(DEXProperties.getDataSource().isDEXChestOwner(user, chest)){
-            DEXSign sign = DEXProperties.getDataSource().getSign(chest);
-            sign.removeAttachedChest(chest);
+            DEXProperties.getDataSource().removeChest(chest);
             return false;
         }
         return true;
+    }
+    
+    public boolean isTool(int id){
+        switch (id){
+            case 256:
+            case 258:
+            case 269:
+            case 270:
+            case 271:
+            case 273:
+            case 274:
+            case 275:
+            case 277:
+            case 278:
+            case 279:
+            case 284:
+            case 285:
+            case 286:
+            case 290:
+            case 291:
+            case 292:
+            case 293:
+            case 294: 
+                return true;
+            default : 
+                return false;
+        }
     }
     
     private class resetSTS extends TimerTask{

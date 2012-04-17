@@ -31,7 +31,11 @@ public interface DEXUser {
     public boolean equals(Object obj);
     public Object getPlayer();
     public int hashCode();
-    public DEXSign setSignPost(int x, int y, int z, int data);
     public float getRotation();
     public void giveItem(DEXItem item);
+    public double getX();
+    public double getY();
+    public double getZ();
+    public int getDim();
+    public String getWorld();
 }
