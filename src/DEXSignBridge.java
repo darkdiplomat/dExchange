@@ -144,6 +144,22 @@ public class DEXSignBridge implements DEXSign {
     }
     
     @Override
+    public void pay(double amount){ //TODO
+        etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Pay", signowners.get(0), amount });
+    }
+    
+    @Override
+    public void charge(double amount){ //TODO
+        etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Charge", signowners.get(0), amount });
+    }
+    
+    @Override
+    public boolean hasBalance(double amount){
+        double bal = (Double)etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Balance", signowners.get(0), amount });
+        return bal >= amount;
+    }
+    
+    @Override
     public String getWorld() {
         return world;
     }

@@ -9,16 +9,17 @@ import net.visualillusionsent.dexchange.signs.DEXTradeSign;
 
 public class DEXListener extends PluginListener{
     private DEXMisc misc;
+    private DEXServerBridge dexserv;
     private PluginLoader loader;
     private Plugin logblock, realms, cuboids, cuboids2, chestlock, lwc, chastity;
     
-    public DEXListener(DEXMisc misc){
+    public DEXListener(DEXMisc misc, DEXServerBridge dexserv){
         this.misc = misc;
+        this.dexserv = dexserv;
         this.loader = etc.getLoader();
-        setPlugins();
     }
     
-    private void setPlugins(){
+    protected void setPlugins(){
         logblock = loader.getPlugin("LogBlock");
         realms = loader.getPlugin("Realms");
         cuboids = loader.getPlugin("CuboidsPlugin");
@@ -79,9 +80,9 @@ public class DEXListener extends PluginListener{
                     return true;
                 }
                 else if(misc.isMakingSTrade(user)){
-                    if(!scanForChestsNear(player, bp)){
+                    if(!dexserv.scanForChestsNear(player, bp)){
                         player.getWorld().setBlock(bp);
-                        bp.setData(DEXProperties.dexserv.getChestFaceData(player.getRotation()));
+                        bp.setData(dexserv.getChestFaceData(player.getRotation()));
                         bp.update();
                         //logBlock(player.getName(), bp);
                         int am = player.getItemStackInHand().getAmount() - 1;
@@ -94,6 +95,10 @@ public class DEXListener extends PluginListener{
                         player.notify("Cannot make into DoubleChest!");
                         return true;
                     }
+                }
+                else if(dexserv.scanForSTradeChestsNear(player, bp)){
+                    player.notify("Cannot make into DoubleChest!");
+                    return true;
                 }
             }
         }
@@ -189,25 +194,6 @@ public class DEXListener extends PluginListener{
                 return true;
             }
         }
-        return false;
-    }
-    
-    private boolean scanForChestsNear(Player player, Block block){
-        int bx = block.getX(), bz = block.getZ();
-        Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
-        if(!(block2.blockType.equals(Block.Type.Chest))){
-            block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
-        }
-        if(!(block2.blockType.equals(Block.Type.Chest))){
-            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
-        }
-        if(!(block2.blockType.equals(Block.Type.Chest))){
-            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
-        }
-        if(block2.blockType.equals(Block.Type.Chest)){
-            return true;
-        }
-            
         return false;
     }
     

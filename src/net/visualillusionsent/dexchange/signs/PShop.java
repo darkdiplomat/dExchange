@@ -84,29 +84,29 @@ public class PShop{
             user.sendMessage(ErrorMessages.E102.message());
             return true;
         }
-        String pname = "";//DEXProperties.fixLongName(user.getName(), true);
-        if(sign.getText(3).equals(pname)){
-            String itemdata = parseItemData(sign.getText(1));
-            int id = 0, damage = 0, contains = 0, numofchests = 0;
-            if(check[0].equals("BLACKLISTED")){
-                user.sendMessage(ErrorMessages.E107.message());
-                return true;
+        String itemdata = parseItemData(sign.getText(1));
+        int id = 0, damage = 0, contains = 0, numofchests = 0, amount = 0;
+        if(itemdata.equals("BLACKLISTED")){
+            user.sendMessage(ErrorMessages.E107.message());
+            return true;
+        }
+        else if(itemdata.equals("ERROR")){
+            user.sendMessage(ErrorMessages.E109.message());
+            return true;
+        }
+        if(sign.getText(1).matches("(\\w*):\\d*") && !sign.getText(1).matches("(\\d*):\\d*")){
+            DEXItem item = ds.getItem(itemdata);
+            id = item.getId();
+            damage = item.getDamage();
+        }
+        else{
+            String[] data = sign.getText(1).split(":");
+            id = Integer.valueOf(data[0]);
+            if(data.length > 1){
+                damage = Integer.valueOf(data[1]);
             }
-            else if(check[0].matches("UNKNOWNITEM|NUMBERERROR|FORMATERROR")){
-                user.sendMessage(ErrorMessages.E109.message());
-                return true;
-            }
-            if(sign.getText(1).matches("(\\w*):\\d*") && !sign.getText(1).matches("(\\d*):\\d*")){
-                DEXItem item = ds.getItem(check[0]);
-                id = item.getId();
-                damage = item.getDamage();
-            }
-            else{
-                id = Integer.valueOf(check[0]);
-                if(check.length > 2){
-                    damage = Integer.valueOf(check[1]);
-                }
-            }
+        }
+        if(sign.isOwner(user)){
             for(DEXChest chest : sign.getAttachedChests()){
                 if(chest.exists()){
                     contains += chest.getAmountOf(id, damage);
@@ -119,37 +119,17 @@ public class PShop{
             user.sendMessage(String.valueOf(contains) +" "+String.valueOf(numofchests));
         }
         else{
-            String[] check = parseItemData(sign.getText(1));
-            if(check[0].equals("BLACKLISTED")){
-                user.sendMessage(ErrorMessages.E107.message());
-                return true;
-            }
-            else if(check[0].matches("UNKNOWNITEM|NUMBERERROR|FORMATERROR")){
-                user.sendMessage(ErrorMessages.E109.message());
-                return true;
-            }
-            int id = 0, damage = 0, amount = 0, contains = 0;
-            DEXItem dexitem;
-            if(sign.getText(1).matches("(\\w*):\\d*") && !sign.getText(1).matches("(\\d*):\\d*")){
-                dexitem = ds.getItem(check[0]);
-                id = dexitem.getId();
-                damage = dexitem.getDamage();
-                amount = Integer.valueOf(check[1]);
-            }
-            else{
-                id = Integer.valueOf(check[0]);
-                if(check.length > 2){
-                    damage = Integer.valueOf(check[1]);
-                }
-                amount = Integer.valueOf(check[2]);
-            }
+            amount = Integer.valueOf(sign.getText(2));
             if (!user.hasRoom(id, damage, amount)){
                 user.sendMessage(ErrorMessages.E111.message());
                 return false;
             }
-            double price = Double.valueOf(sign.getText(2));
+            double price = Double.valueOf(sign.getText(3));
             if(!user.hasBalance(price)){
                 user.sendMessage(ErrorMessages.E110.message());
+                return false;
+            }
+            else if(!sign.hasBalance(price)){
                 return false;
             }
             int checkamount = amount;
@@ -173,48 +153,46 @@ public class PShop{
             }
             user.addItems(id, damage, amount);
             user.charge(price);
-            //user.paySign(DEXProperties.getUserNameFromFix(sign.getText(3)), price);
-            user.sendMessage("Purchased!");
+            sign.pay(price);
+            user.sendMessage("Purchased!"); //TODO
         }
         return false;
     }
     
     private String parseItemData(String line){
-        int id = 0, damage = 0;
-        if(!line.matches("\\d{1,4}") && !line.matches("(\\d{1,4}):\\d{1,5}")){
-            line = line.toUpperCase();
-            DEXItem dexitem = ds.getItem(line);
-            if(dexitem == null){
-                return "ERROR";
+        try{
+            int id = 0, damage = 0;
+            if(!line.matches("\\d{1,4}") && !line.matches("(\\d{1,4}):\\d{1,5}")){
+                line = line.toUpperCase();
+                DEXItem dexitem = ds.getItem(line);
+                if(dexitem == null){
+                    return "ERROR";
+                }
             }
-        }
-        else if (line.contains(":")){
-            String[] iddamage = line.split(":");
-            try{
+            else if (line.contains(":")){
+                String[] iddamage = line.split(":");
                 id = Integer.parseInt(iddamage[0]);
                 damage = Integer.parseInt(iddamage[1]);
             }
-            catch(NumberFormatException nfe){
-                return "ERROR";
-            }
-        }
-        else{
-            try{
+            else{
                 id = Integer.parseInt(line);
             }
-            catch(NumberFormatException nfe){
-                return "ERROR";
+            
+            if(DEXProperties.isBlackListed(id, damage)){
+                return "BLACKLISTED";
             }
-        }
-        if(DEXProperties.isBlackListed(id, damage)){
-            return "BLACKLISTED";
-        }
-        DEXItem dexitem = ds.getItem(id, damage);
-        if(dexitem != null){
-            if(dexitem.getName().length() < 16){
-                return dexitem.getName();
+            
+            DEXItem dexitem = ds.getItem(id, damage);
+            if(dexitem != null){
+                if(dexitem.getName().length() < 16){
+                    return dexitem.getName();
+                }
             }
+            
+            return line;
         }
-        return line;
+        catch (NumberFormatException nfe){
+            return "ERROR";
+        }
     }
 }

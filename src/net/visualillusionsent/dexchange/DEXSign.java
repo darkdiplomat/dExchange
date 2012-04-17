@@ -39,6 +39,10 @@ public interface DEXSign {
     public void update();
     public void CancelPlacement();
     
+    public void pay(double amount);
+    public void charge(double amount);
+    public boolean hasBalance(double amount);
+    
     public String getWorld();
     public int getX();
     public int getY();

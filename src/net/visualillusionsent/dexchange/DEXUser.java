@@ -23,9 +23,6 @@ public interface DEXUser {
     public boolean GlobalHasBalance(double amount);
     public void payGlobal(double amount);
     public void chargeGlobal(double amount);
-    public double getSignBalance(String other);
-    public void paySign(String other, double amount);
-    public void chargeSign(String other, double amount);
     public DEXItem getItemInHand();
     public void removeItemInHand();
     public boolean equals(Object obj);

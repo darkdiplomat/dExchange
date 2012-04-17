@@ -1,5 +1,4 @@
 import net.visualillusionsent.dexchange.DEXItem;
-import net.visualillusionsent.dexchange.DEXSign;
 import net.visualillusionsent.dexchange.DEXUser;
 import net.visualillusionsent.dexchange.data.DEXProperties;
 
@@ -228,21 +227,6 @@ public class DEXUserBridge implements DEXUser{
         if(!DEXProperties.gacc.equals("N/A")){
             etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Joint-Withdraw-NC", DEXProperties.gacc, amount });
         }
-    }
-    
-    @Override
-    public double getSignBalance(String other){
-        return (Double)etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Balance", other });
-    }
-    
-    @Override
-    public void paySign(String other, double amount){
-        etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Pay", other, amount });
-    }
-    
-    @Override
-    public void chargeSign(String other, double amount){
-        etc.getLoader().callCustomHook("dCBalance", new Object[]{ "Player-Charge", other, amount });
     }
 
     @Override

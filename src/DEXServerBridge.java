@@ -77,4 +77,45 @@ public class DEXServerBridge implements DEXServer {
             return 0x2;
         }
     }
+    
+    public boolean scanForChestsNear(Player player, Block block){
+        int bx = block.getX(), bz = block.getZ();
+        Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
+        }
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
+        }
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
+        }
+        if(block2.blockType.equals(Block.Type.Chest)){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean scanForSTradeChestsNear(Player player, Block block){
+        int bx = block.getX(), bz = block.getZ();
+        Block block2 = player.getWorld().getBlockAt(bx-1, block.getY(), bz);
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx+1, block.getY(), bz);
+        }
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz-1);
+        }
+        if(!(block2.blockType.equals(Block.Type.Chest))){
+            block2 = player.getWorld().getBlockAt(bx, block.getY(), bz+1);
+        }
+        if(block2.blockType.equals(Block.Type.Chest)){
+            Sign sign = (Sign)player.getWorld().getComplexBlock(block2.getX(), block2.getY()+1, block2.getZ());
+            if(sign != null){
+                if(sign.getText(0).equals("§6[S-TRADE]")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

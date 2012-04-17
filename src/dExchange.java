@@ -9,6 +9,7 @@ public class dExchange extends Plugin{
     private Logger logger = Logger.getLogger("Minecraft");
     private DEXListener dExL;
     private DEXProperties dExP;
+    private DEXServerBridge dexserv;
     private boolean isInitialized = false;
     
     public void enable(){
@@ -21,10 +22,10 @@ public class dExchange extends Plugin{
             logger.info("A new version is availible! v"+vc.getCurrentVersion());
         }
         logger.info(this.getName()+" v"+DEXCommand.version+" initializing...");
-        
-        dExP = new DEXProperties(new DEXServerBridge());
+        dexserv = new DEXServerBridge();
+        dExP = new DEXProperties(dexserv);
         if(dExP.load()){
-            dExL = new DEXListener(new DEXMisc());
+            dExL = new DEXListener(new DEXMisc(), dexserv);
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_BROKEN, dExL, this, PluginListener.Priority.MEDIUM);
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_DESTROYED, dExL, this, PluginListener.Priority.MEDIUM);
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_PLACE, dExL, this, PluginListener.Priority.MEDIUM);
