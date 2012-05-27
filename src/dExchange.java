@@ -13,13 +13,13 @@ public class dExchange extends Plugin{
     private boolean isInitialized = false;
     
     public void enable(){
-        logger.info(this.getName()+" v"+DEXCommand.version+" by DarkDiplomt enabled!");
+        logger.info(this.getName()+" v"+DEXCommand.version+" by DarkDiplomat enabled!");
     }
     
     public void initialize(){
         VersionCheck vc = new VersionCheck(DEXCommand.version, DEXCommand.checkurl);
         if(!vc.isLatest()){
-            logger.info("A new version is availible! v"+vc.getCurrentVersion());
+            logger.info("A new version is available! v"+vc.getCurrentVersion());
         }
         logger.info(this.getName()+" v"+DEXCommand.version+" initializing...");
         dexserv = new DEXServerBridge();
