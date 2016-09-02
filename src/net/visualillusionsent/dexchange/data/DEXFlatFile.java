@@ -56,7 +56,7 @@ public class DEXFlatFile extends DEXDataSource{
                 FileInputStream stream = new FileInputStream(ItemsFile);
                 Items.load(stream);
             } catch (IOException e) {
-                logger.info("[dExchange] Failed to load ItemNameFile.txt... dExchange will now be terminatedd...");
+                logger.info("[dExchange] Failed to load ItemNameFile.txt... dExchange will now be terminated...");
                 return false;
             }
             for(Object key : Items.keySet()){
